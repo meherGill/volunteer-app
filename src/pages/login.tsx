@@ -1,15 +1,22 @@
+import axios from "axios";
 import type { NextPage } from "next";
 import Link from "next/link";
 
+const URL_TO_LOGIN = "http://localhost:3000/api/account/login"
 const Login: NextPage = () => {
   
-	const handleLogin = () => {
+	const handleLogin = () : Promise<void> => {
 		const checkboxVal = (document.querySelector('#login_isOrgAccount') as HTMLInputElement).checked
 		const JSONObject = {
 			email : (document.querySelector("#login_email") as HTMLInputElement).value,
 			password : (document.querySelector("#login_password") as HTMLInputElement).value,
-			isBusinessAccount: checkboxVal,
+			accountType: checkboxVal,
 		}
+		console.log("ok")
+		return axios.post(URL_TO_LOGIN, JSONObject).then((val) => {
+			console.log(val)
+			}
+		)
 	}
 
 	return (
@@ -55,7 +62,7 @@ const Login: NextPage = () => {
 				</Link>
 			</button>
 			<button className="bg-btn-500 w-36 h-8 ml-8 rounded-sm"
-						onClick={handleLogin}>Login</button>
+					onClick={handleLogin}>Login</button>
 			</div>
 		</div>
 		</div>

@@ -1,22 +1,57 @@
 import type { NextPage } from 'next';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import GMaps from './GMaps';
 import ProfilePicture from './ProfilePicture';
-/*
-<div>
-                    <button className='w-full h-full bg-bg1-500 mr-1 hover:bg-cyan-900 hover:text-alrtBx-500'>Find nearest opportunity</button>
-                </div>
-                <div>
-                    <button className='w-full h-full bg-bg1-500 ml-1 hover:bg-cyan-900 hover:text-alrtBx-500'>Request AID</button>
-                </div>
-                <div>
-                    <button className='w-full h-full bg-bg1-500 mt-1 mr-1 hover:bg-cyan-900 hover:text-alrtBx-500'>Quick Donate</button>
-                </div>
-                <div>
-                    <button className='w-full h-full bg-bg1-500 mt-1 ml-1 hover:bg-cyan-900 hover:text-alrtBx-500'>Your Stats</button>
-                </div>    
-                */
+import RequestAid from './requestAid';
+
+enum Components {
+    MAP = "map",
+    STATS = "stats",
+    REQUEST_AID = "request aid",
+    DONATE = "donate",
+}
 
 const MainUser = () => {
+    
+    const [width, setWidth] = useState("");
+    const [height, setHeight] = useState("");
+    const [selectedItem , setSelectedItem] = useState('')
+
+    useEffect(() => {
+        const element = document.querySelector("#contentContainer") as HTMLElement;
+        let styles = window.getComputedStyle(element)
+        let height : string = styles.height;
+        let width : string = styles.width;
+        console.log(height, width);
+        setWidth(width);
+        setHeight(height);
+        setSelectedItem(Components.REQUEST_AID)
+        const selectedComp = document.querySelector("#requestAid") as HTMLElement;
+        selectedComp.focus();
+    }, [])
+
+    const showComponent = () => {
+        if (selectedItem === Components.STATS){
+            return(
+                <div></div>
+            )
+        }
+        else if(selectedItem === Components.MAP){
+            return(
+                <GMaps width={width} height={height}/>
+            )
+        }
+        else if(selectedItem === Components.DONATE){
+            return(
+                <div></div>
+            )
+        }
+        else if(selectedItem === Components.REQUEST_AID){
+            return(
+                <RequestAid />
+            )
+        }
+    }
     return(
         <>
         <div className='w-full h-16'></div>
@@ -26,21 +61,30 @@ const MainUser = () => {
                     <ProfilePicture imgLocation='/profilePic.jpeg'/>
                 </div>
                 <div>
-                    <button className="h-24 w-full hover:bg-rose-200">Find Nearby Opportunities</button>
+                    <button onClick={() => {setSelectedItem(Components.MAP)}} className="h-24 w-full focus:bg-gray-800 active:text-bg2-500 hover:bg-rose-200">
+                        Find Nearby Opportunities
+                    </button>
                 </div>
                 <div>
-                    <button className="h-24 w-full hover:bg-rose-200">Quick Donate</button>
+                    <button onClick={() => {setSelectedItem(Components.DONATE)}} className="h-24 w-full focus:bg-gray-800 focus:text-bg2-500 hover:bg-rose-200">
+                        Quick Donate
+                    </button>
                 </div>
                 <div>
-                    <button className="h-24 w-full hover:bg-rose-200">REQUEST AID</button>
+                    <button onClick={() => {setSelectedItem(Components.REQUEST_AID)}} id="requestAid" className="h-24 w-full focus:bg-gray-800 focus:text-bg2-500 hover:bg-rose-200">
+                        REQUEST AID
+                    </button>
                 </div>
                 <div>
-                    <button className="h-24 w-full hover:bg-rose-200">STATS</button>
+                    <button onClick={() => {setSelectedItem(Components.STATS)}} className="h-24 w-full focus:bg-gray-800 focus:text-bg2-500 hover:bg-rose-200">
+                        STATS
+                    </button>
                 </div>
             </div>
-            <div className="grow-3 bg-gray-800 grid grid-rows-2 grid-cols-2 x-divide-2 y-divide-2">
+            <div id="contentContainer" className="grow-3 focus:bg-gray-800 focus:text-bg2-500 bg-gray-800 x-divide-2 y-divide-2">
+                {showComponent()}
             </div>
-            <div className="grow-1 bg-bg2-500 p-2">
+            <div className="w-40 bg-bg2-500 p-2">
 
             </div>
         </div>
