@@ -1,10 +1,12 @@
 import Link from "next/link";
 import type { NextPage } from "next";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 const URL_TO_LOGIN = "http://localhost:3000/api/account/login";
 const Login: NextPage = () => {
-  
+    const router = useRouter();
+
 	const handleLogin = (): Promise<void> => {
 		const checkboxVal = (
 		  document.querySelector("#login_isOrgAccount") as HTMLInputElement
@@ -21,8 +23,16 @@ const Login: NextPage = () => {
 		  if (val.status === 200) {
 			console.log("wowowo");
 			localStorage.setItem("authenticated", "true");
+			localStorage.setItem("accountType" , val.data.accountType)
+			let responseJson = val.data;
+			localStorage.setItem("userData", JSON.stringify(responseJson))
+
+			if (val.data.accountType === "volunteer"){
+				console.log("hmm")
+				router.push("/VolunteerHome")
+			}
 		  } else {
-			localStorage.setItem("authenticated", "false");
+			localStorage.clear();
 		  }
 		});
 	  };

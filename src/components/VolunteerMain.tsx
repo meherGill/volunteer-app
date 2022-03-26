@@ -31,6 +31,7 @@ const MainUser = () => {
     }, [])
 
     const showComponent = () => {
+        console.log(process.env.GCP_API_KEY)
         if (selectedItem === Components.STATS){
             return(
                 <div></div>
