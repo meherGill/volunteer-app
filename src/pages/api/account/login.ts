@@ -11,8 +11,14 @@ export default async function handler(
 ) {
   switch (req.method) {
     case "POST":
-      const { email, password, accountType } = req.body;
-
+      const { email, password, isOrg } = req.body;
+      let accountType : string;
+      if (!isOrg){
+        accountType = "Volunteer"
+      }
+      else{
+        accountType = "Org"
+      }
       if (!email || !password || !accountType) {
         res.status(400).send("One or more fields are missing");
       }
@@ -30,7 +36,6 @@ export default async function handler(
             S: email,
           },
         },
-        ProjectionExpression: "password",
       };
       const command = new GetItemCommand(postParams);
 
@@ -38,13 +43,13 @@ export default async function handler(
         const response = await dynamodb.send(command);
 
         if (!response.Item) {
-          res.status(404).send(`${accountType} account does not exist`);
+          res.status(405).send(`${accountType} account does not exist`);
         }
         console.log(response.Item?.password?.S);
         if (response.Item?.password?.S !== password) {
           res.status(401).send("Incorrect password");
         }
-        res.status(200).send("User verified successfully");
+        res.status(200).json(response.Item);
       } catch (err) {
         res.status(500).send(err);
       }
