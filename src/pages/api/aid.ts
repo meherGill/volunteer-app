@@ -37,7 +37,7 @@ const handleGetRequest = async (_: NextApiRequest, res: NextApiResponse) => {
     if (!response.Items) {
       res.status(404).send("No requests for aid at the moment");
     }
-    res.status(response.$metadata.httpStatusCode!).json(response.Items || 200);
+    res.status(response.$metadata.httpStatusCode! || 200).json(response.Items);
   } catch (err) {
     res.status(500).send(err);
   }
@@ -58,7 +58,7 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
       email: {
         S: email,
       },
-      // TODO: verify this command
+      // TODO: verify the address
       address: {
         S: address,
       },
