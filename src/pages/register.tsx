@@ -61,7 +61,7 @@ const Register : NextPage = () => {
         switchContext()
     }, [])
 
-    const handleSubmit = (e : React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e : React.FormEvent<HTMLFormElement>) : Promise<void> => {
         e.preventDefault();
         if (context === "Volunteer"){
             let objectToSend = {
@@ -73,8 +73,10 @@ const Register : NextPage = () => {
                 "phone" : (document.querySelector("#vol_phoneNumber") as HTMLInputElement).value,
             }
             console.log(objectToSend);
-            // myJSON = JSON.stringify(objectToSend)
-            axios.put(URL_TO_REGISTER, objectToSend,)
+            // const myJSON = JSON.stringify(objectToSend)
+            return axios.post(URL_TO_REGISTER, objectToSend).then((val) => {
+                console.log(val)
+            })
         }
         else{
             let objectToSend = {
@@ -86,7 +88,7 @@ const Register : NextPage = () => {
                 "phone" : (document.querySelector("#org_phoneNumber") as HTMLInputElement).value,
             }
             const myJSON = JSON.stringify(objectToSend)
-            axios.post(URL_TO_REGISTER, myJSON).then((val) => {
+            return axios.post(URL_TO_REGISTER, myJSON).then((val) => {
                 console.log(val)
             })
         }
