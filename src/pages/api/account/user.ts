@@ -74,12 +74,15 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   const command = new PutItemCommand(putParams);
 
   try {
+    console.log(putParams);
     const response = await dynamodb.send(command);
     response.$metadata.httpStatusCode;
     res
       .status(response?.$metadata?.httpStatusCode!)
       .send("User successfully created");
+    res.end();
   } catch (err) {
+    console.log(err);
     res.status(409).send(err);
   }
 };

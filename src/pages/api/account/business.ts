@@ -40,6 +40,7 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!response.Item) {
       res.status(404).send("Organization user not found");
     }
+    res.status(response?.$metadata?.httpStatusCode!).json(response.Item);
   } catch (err) {
     res.status(500).send(err);
   }
@@ -76,7 +77,9 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const response = await dynamodb.send(putNewUserItem);
-    res.status(201).send("Organiztion account successfully created");
+    res
+      .status(response?.$metadata?.httpStatusCode!)
+      .send("Organiztion account successfully created");
   } catch (err) {
     res.status(409).send(err);
   }

@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { dynamodb } from "@lib/dynamo-db";
 
-const TABLE_NAME = "CAMPAGIN";
+const TABLE_NAME = "Campaign";
 
 export default async function handler(
   req: NextApiRequest,
@@ -37,6 +37,7 @@ const handleGetRequest = async (_: NextApiRequest, res: NextApiResponse) => {
     if (!response.Items) {
       res.status(404).send("No campagins available");
     }
+    res.status(response.$metadata.httpStatusCode!).json(response.Items);
   } catch (err) {
     res.status(500).send(err);
   }
@@ -53,7 +54,7 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
       orgEmail: {
         S: orgEmail,
       },
-      tile: {
+      title: {
         S: title,
       },
       about: {
@@ -67,7 +68,9 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const response = await dynamodb.send(putNewUserItem);
-    res.status(201).send("User successfully created");
+    res
+      .status(response.$metadata.httpStatusCode)
+      .send("Campaign successfully created");
   } catch (err) {
     res.status(409).send(err);
   }

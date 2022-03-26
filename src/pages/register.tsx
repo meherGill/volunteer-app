@@ -61,7 +61,7 @@ const Register : NextPage = () => {
         switchContext()
     }, [])
 
-    const handleSubmit = (e : React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e : React.FormEvent<HTMLFormElement>) : Promise<void> => {
         e.preventDefault();
         if (context === "Volunteer"){
             let objectToSend = {
@@ -70,10 +70,13 @@ const Register : NextPage = () => {
                 "lastName" : (document.querySelector("#vol_lastName") as HTMLInputElement).value,
                 "email" : (document.querySelector("#vol_email") as HTMLInputElement).value,
                 "password" : (document.querySelector("#vol_password") as HTMLInputElement).value,
-                "phoneNumber" : (document.querySelector("#vol_phoneNumber") as HTMLInputElement).value,
+                "phone" : (document.querySelector("#vol_phoneNumber") as HTMLInputElement).value,
             }
-            // myJSON = JSON.stringify(objectToSend)
-            axios.post(URL_TO_REGISTER, objectToSend)
+            console.log(objectToSend);
+            // const myJSON = JSON.stringify(objectToSend)
+            return axios.post(URL_TO_REGISTER, objectToSend).then((val) => {
+                console.log(val)
+            })
         }
         else{
             let objectToSend = {
@@ -82,10 +85,10 @@ const Register : NextPage = () => {
                 "type" : (document.querySelector("#org_type") as HTMLInputElement).value,
                 "email" : (document.querySelector("#org_email") as HTMLInputElement).value,
                 "password" : (document.querySelector("#org_password") as HTMLInputElement).value,
-                "phoneNumber" : (document.querySelector("#org_phoneNumber") as HTMLInputElement).value,
+                "phone" : (document.querySelector("#org_phoneNumber") as HTMLInputElement).value,
             }
             const myJSON = JSON.stringify(objectToSend)
-            axios.post(URL_TO_REGISTER, myJSON).then((val) => {
+            return axios.post(URL_TO_REGISTER, myJSON).then((val) => {
                 console.log(val)
             })
         }
