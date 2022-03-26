@@ -50,6 +50,10 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   const { givenName, lastName, email, phone, password } = req.body;
 
+  if (!givenName || !lastName || !email || !phone || !password) {
+    res.status(400).send("One or more fields are missing");
+  }
+
   const putParams = {
     Item: {
       givenName: {
@@ -76,9 +80,8 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     console.log(putParams);
     const response = await dynamodb.send(command);
-    response.$metadata.httpStatusCode;
     res
-      .status(response?.$metadata?.httpStatusCode!)
+      .status(response.$metadata.httpStatusCode!)
       .send("User successfully created");
     res.end();
   } catch (err) {
