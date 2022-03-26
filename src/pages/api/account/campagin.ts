@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { PutItemCommand, GetItemCommand } from "@aws-sdk/client-dynamodb";
+import { PutItemCommand, ScanCommand } from "@aws-sdk/client-dynamodb";
+import { v4 as uuidv4 } from "uuid";
 
 import { dynamodb } from "@lib/dynamo-db";
 
-const TABLE_NAME = "OrganizationAccount";
+const TABLE_NAME = "CAMPAGIN";
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,28 +18,24 @@ export default async function handler(
     case "POST":
       handlePostRequest(req, res);
       break;
+
     default:
       res.status(404).json({ success: false });
   }
 }
 
-const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
+const handleGetRequest = async (_: NextApiRequest, res: NextApiResponse) => {
   const getParams = {
     TableName: TABLE_NAME,
-    Key: {
-      email: {
-        S: "redcross@helpline.com",
-      },
-    },
   };
 
-  const command = new GetItemCommand(getParams);
+  const command = new ScanCommand(getParams);
 
   try {
     const response = await dynamodb.send(command);
 
-    if (!response.Item) {
-      res.status(404).send("Organization user not found");
+    if (!response.Items) {
+      res.status(404).send("No campagins available");
     }
   } catch (err) {
     res.status(500).send(err);
@@ -46,27 +43,21 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { name, email, type, password, phone, website } = req.body;
+  const { title, about, orgEmail } = req.body;
 
   const putParams = {
     Item: {
-      name: {
-        S: name,
+      _id: {
+        S: uuidv4(),
       },
-      email: {
-        S: email,
+      orgEmail: {
+        S: orgEmail,
       },
-      phone: {
-        S: phone,
+      tile: {
+        S: title,
       },
-      type: {
-        S: type,
-      },
-      password: {
-        S: password,
-      },
-      website: {
-        S: website,
+      about: {
+        S: about,
       },
     },
     TableName: TABLE_NAME,
@@ -76,7 +67,7 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const response = await dynamodb.send(putNewUserItem);
-    res.status(201).send("Organiztion account successfully created");
+    res.status(201).send("User successfully created");
   } catch (err) {
     res.status(409).send(err);
   }
