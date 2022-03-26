@@ -34,12 +34,12 @@ export default async function handler(
       break;
 
     case "POST":
-      const { firstName, lastName, email, phone, password } = req.body;
+      const { givenName, lastName, email, phone, password } = req.body;
 
       const putParams = {
         Item: {
-          firstName: {
-            S: firstName,
+          givenName: {
+            S: givenName,
           },
           lastName: {
             S: lastName,
