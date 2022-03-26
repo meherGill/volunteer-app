@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import AppBar from '../components/AppBar'
-import MainUser from '@components/MainUser'
+import MainUser from '@components/VolunteerMain'
 const Home : NextPage = () => {
     {console.log("home")}
    return (
