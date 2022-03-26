@@ -1,18 +1,14 @@
-import { IpcNetConnectOpts } from 'net';
-import type { NextPage } from 'next';
-import React from 'react';
+import { IpcNetConnectOpts } from "net";
 
-interface IProfilePicProps  {
-    imgLocation: string
+interface IProfilePicProps {
+  imgLocation: string;
 }
-const ProfilePicture = (props : IProfilePicProps) => {
-    return(
-       <div>
-           <img src={props.imgLocation} className="h-44">
-
-           </img>
-       </div>
-    )
-}
+const ProfilePicture = ({ imgLocation }: IProfilePicProps) => {
+  return (
+    <div>
+      <img src={imgLocation} className="h-44" />
+    </div>
+  );
+};
 
 export default ProfilePicture;
