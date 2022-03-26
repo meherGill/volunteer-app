@@ -75,7 +75,7 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     const response = await dynamodb.send(cmd);
     res
       .status(response.$metadata.httpStatusCode! || 200)
-      .send("Campaign successfully created");
+      .send("Aid request created successfully");
   } catch (err) {
     res.status(409).send(err);
   }
