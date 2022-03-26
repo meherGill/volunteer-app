@@ -12,22 +12,18 @@ export default async function handler(
   switch (req.method) {
     case "POST":
       const { email, password, isOrg } = req.body;
-      let accountType : string;
-      if (!isOrg){
-        accountType = "Volunteer"
-      }
-      else{
-        accountType = "Org"
-      }
-      if (!email || !password || !accountType) {
+
+      if (!email || !password) {
         res.status(400).send("One or more fields are missing");
       }
 
+      // to send back back to the frontend on what type user is logging in
+      const accountType = isOrg ? "organization" : "volunteer";
+
       // set the table name based on the accountType
-      const TABLE_NAME: TableName =
-        accountType === "Volunteer"
-          ? "VolunteerAccount"
-          : "OrganizationAccount";
+      const TABLE_NAME: TableName = isOrg
+        ? "OrganizationAccount"
+        : "VolunteerAccount";
 
       const postParams = {
         TableName: TABLE_NAME,
@@ -45,11 +41,19 @@ export default async function handler(
         if (!response.Item) {
           res.status(405).send(`${accountType} account does not exist`);
         }
-        console.log(response.Item?.password?.S);
         if (response.Item?.password?.S !== password) {
           res.status(401).send("Incorrect password");
         }
-        res.status(200).json(response.Item);
+
+        const moddedData = {
+          givenName: response.Item?.givenName?.S,
+          lastName: response.Item?.lastName?.S,
+          email: response.Item?.email?.S,
+          phone: response.Item?.phone?.S,
+          accountType: accountType,
+        };
+
+        res.status(200).json(moddedData);
       } catch (err) {
         res.status(500).send(err);
       }
