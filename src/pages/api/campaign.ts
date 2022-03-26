@@ -44,9 +44,9 @@ const handleGetRequest = async (_: NextApiRequest, res: NextApiResponse) => {
 };
 
 const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { title, about, orgEmail } = req.body;
+  const { title, description, address, orgEmail } = req.body;
 
-  if (!title || !about || !!orgEmail) {
+  if (!title || !description || !address || !orgEmail) {
     res.status(400).send("One or more fields are missing");
   }
 
@@ -61,8 +61,11 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
       title: {
         S: title,
       },
-      about: {
-        S: about,
+      description: {
+        S: description,
+      },
+      address: {
+        S: address,
       },
     },
     TableName: TABLE_NAME,
@@ -74,7 +77,7 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     const response = await dynamodb.send(cmd);
     res
       .status(response.$metadata.httpStatusCode!)
-      .send("Campaign successfully created");
+      .send("Campaign created created");
   } catch (err) {
     res.status(409).send(err);
   }
