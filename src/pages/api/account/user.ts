@@ -3,7 +3,7 @@ import { PutItemCommand, GetItemCommand } from "@aws-sdk/client-dynamodb";
 
 import { dynamodb } from "@lib/dynamo-db";
 
-const TABLE_NAME = "UserAccount";
+const TABLE_NAME = "VolunteerAccount";
 
 export default async function handler(
   req: NextApiRequest,
@@ -41,7 +41,6 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!response.Item) {
       res.status(404).send("User not found");
     }
-
     res.status(200).json(response.Item);
   } catch (err) {
     res.status(500).send(err);
@@ -76,7 +75,10 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const response = await dynamodb.send(command);
-    res.status(201).send("User successfully created");
+    response.$metadata.httpStatusCode;
+    res
+      .status(response?.$metadata?.httpStatusCode!)
+      .send("User successfully created");
   } catch (err) {
     res.status(409).send(err);
   }
