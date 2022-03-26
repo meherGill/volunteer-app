@@ -1,5 +1,5 @@
 import type { NextPage } from 'next'
-import Palette from '../../public/Colors'
+import Link from 'next/link'
 
 const Login : NextPage = () => {
 	{console.log("login")}
@@ -18,7 +18,9 @@ const Login : NextPage = () => {
 					</div>
 				</div>
 				<div className="flex">
-				   <button className='bg-btn-500 w-36 h-8 mr-8 rounded-sm'>Register</button>
+				   <button className='bg-btn-500 w-36 h-8 mr-8 rounded-sm'>
+					   <Link href="/register"><a>Register</a></Link>
+					</button>
 				   <button className='bg-btn-500 w-36 h-8 ml-8 rounded-sm'>Login</button>
 				</div>
 			</div>

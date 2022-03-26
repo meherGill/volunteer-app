@@ -18,3 +18,12 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.greyedOut {
+  color: rgb(161 161 170);
+}
+
+.selected {
+  color: #007980;
+  font-weight: bold;
+}
