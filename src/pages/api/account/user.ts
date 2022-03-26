@@ -41,6 +41,8 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!response.Item) {
       res.status(404).send("User not found");
     }
+
+    res.status(200).json(response.Item);
   } catch (err) {
     res.status(500).send(err);
   }
