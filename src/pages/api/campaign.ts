@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { dynamodb } from "@lib/dynamo-db";
 
-const TABLE_NAME = "CAMPAGIN";
+const TABLE_NAME = "Campaign";
 
 export default async function handler(
   req: NextApiRequest,
@@ -37,6 +37,7 @@ const handleGetRequest = async (_: NextApiRequest, res: NextApiResponse) => {
     if (!response.Items) {
       res.status(404).send("No campagins available");
     }
+    res.status(response.$metadata.httpStatusCode!).json(response.Items);
   } catch (err) {
     res.status(500).send(err);
   }
@@ -44,6 +45,10 @@ const handleGetRequest = async (_: NextApiRequest, res: NextApiResponse) => {
 
 const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   const { title, about, orgEmail } = req.body;
+
+  if (!title || !about || !!orgEmail) {
+    res.status(400).send("One or more fields are missing");
+  }
 
   const putParams = {
     Item: {
@@ -53,7 +58,7 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
       orgEmail: {
         S: orgEmail,
       },
-      tile: {
+      title: {
         S: title,
       },
       about: {
@@ -63,11 +68,13 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     TableName: TABLE_NAME,
   };
 
-  const putNewUserItem = new PutItemCommand(putParams);
+  const cmd = new PutItemCommand(putParams);
 
   try {
-    const response = await dynamodb.send(putNewUserItem);
-    res.status(201).send("User successfully created");
+    const response = await dynamodb.send(cmd);
+    res
+      .status(response.$metadata.httpStatusCode!)
+      .send("Campaign successfully created");
   } catch (err) {
     res.status(409).send(err);
   }

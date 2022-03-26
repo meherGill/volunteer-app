@@ -3,7 +3,7 @@ import { PutItemCommand, GetItemCommand } from "@aws-sdk/client-dynamodb";
 
 import { dynamodb } from "@lib/dynamo-db";
 
-const TABLE_NAME = "UserAccount";
+const TABLE_NAME = "VolunteerAccount";
 
 export default async function handler(
   req: NextApiRequest,
@@ -41,7 +41,6 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!response.Item) {
       res.status(404).send("User not found");
     }
-
     res.status(200).json(response.Item);
   } catch (err) {
     res.status(500).send(err);
@@ -50,6 +49,10 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   const { givenName, lastName, email, phone, password } = req.body;
+
+  if (!givenName || !lastName || !email || !phone || !password) {
+    res.status(400).send("One or more fields are missing");
+  }
 
   const putParams = {
     Item: {
@@ -75,12 +78,14 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   const command = new PutItemCommand(putParams);
 
   try {
-    console.log(putParams)
+    console.log(putParams);
     const response = await dynamodb.send(command);
-    res.status(201).send("User successfully created");
-    res.end()
+    res
+      .status(response.$metadata.httpStatusCode!)
+      .send("User successfully created");
+    res.end();
   } catch (err) {
-    console.log(err)
+    console.log(err);
     res.status(409).send(err);
   }
 };
