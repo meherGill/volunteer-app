@@ -77,6 +77,8 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
       .status(response.$metadata.httpStatusCode! || 200)
       .send("Aid request created successfully");
   } catch (err) {
+    console.log(err)
+    console.log("pppp")
     res.status(409).send(err);
   }
 };
