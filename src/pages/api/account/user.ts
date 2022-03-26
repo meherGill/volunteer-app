@@ -33,7 +33,7 @@ export default async function handler(
       }
       break;
 
-    case "POST":
+    case "PUT":
       const { givenName, lastName, email, phone, password } = req.body;
 
       const putParams = {
@@ -60,9 +60,11 @@ export default async function handler(
       const putNewUserItem = new PutItemCommand(putParams);
 
       try {
+        console.log(putParams)
         const response = await dynamodb.send(putNewUserItem);
         res.status(201).send("User successfully created");
       } catch (err) {
+        console.log(err)
         res.status(409).send(err);
       }
       break;

@@ -70,10 +70,11 @@ const Register : NextPage = () => {
                 "lastName" : (document.querySelector("#vol_lastName") as HTMLInputElement).value,
                 "email" : (document.querySelector("#vol_email") as HTMLInputElement).value,
                 "password" : (document.querySelector("#vol_password") as HTMLInputElement).value,
-                "phoneNumber" : (document.querySelector("#vol_phoneNumber") as HTMLInputElement).value,
+                "phone" : (document.querySelector("#vol_phoneNumber") as HTMLInputElement).value,
             }
+            console.log(objectToSend);
             // myJSON = JSON.stringify(objectToSend)
-            axios.post(URL_TO_REGISTER, objectToSend)
+            axios.put(URL_TO_REGISTER, objectToSend,)
         }
         else{
             let objectToSend = {
@@ -82,7 +83,7 @@ const Register : NextPage = () => {
                 "type" : (document.querySelector("#org_type") as HTMLInputElement).value,
                 "email" : (document.querySelector("#org_email") as HTMLInputElement).value,
                 "password" : (document.querySelector("#org_password") as HTMLInputElement).value,
-                "phoneNumber" : (document.querySelector("#org_phoneNumber") as HTMLInputElement).value,
+                "phone" : (document.querySelector("#org_phoneNumber") as HTMLInputElement).value,
             }
             const myJSON = JSON.stringify(objectToSend)
             axios.post(URL_TO_REGISTER, myJSON).then((val) => {
