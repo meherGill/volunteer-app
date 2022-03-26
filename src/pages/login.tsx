@@ -4,27 +4,29 @@ import axios from "axios";
 
 const URL_TO_LOGIN = "http://localhost:3000/api/account/login";
 const Login: NextPage = () => {
-  const handleLogin = (): Promise<void> => {
-    const checkboxVal = (
-      document.querySelector("#login_isOrgAccount") as HTMLInputElement
-    ).checked;
-    const JSONObject = {
-      email: (document.querySelector("#login_email") as HTMLInputElement).value,
-      password: (document.querySelector("#login_password") as HTMLInputElement)
-        .value,
-      isOrg: checkboxVal,
-    };
-    console.log(JSONObject);
-    return axios.post(URL_TO_LOGIN, JSONObject).then((val) => {
-      console.log(val);
-      if (val.status === 200) {
-        console.log("wowowo");
-        localStorage.setItem("authenticated", "true");
-      } else {
-        localStorage.setItem("authenticated", "false");
-      }
-    });
-  };
+  
+	const handleLogin = (): Promise<void> => {
+		const checkboxVal = (
+		  document.querySelector("#login_isOrgAccount") as HTMLInputElement
+		).checked;
+		const JSONObject = {
+		  email: (document.querySelector("#login_email") as HTMLInputElement).value,
+		  password: (document.querySelector("#login_password") as HTMLInputElement)
+			.value,
+		  isOrg: checkboxVal,
+		};
+		console.log(JSONObject);
+		return axios.post(URL_TO_LOGIN, JSONObject).then((val) => {
+		  console.log(val);
+		  if (val.status === 200) {
+			console.log("wowowo");
+			localStorage.setItem("authenticated", "true");
+		  } else {
+			localStorage.setItem("authenticated", "false");
+		  }
+		});
+	  };
+  
 
   return (
     <div className="h-screen w-screen bg-bg1-500 flex justify-center items-center">
