@@ -10,7 +10,7 @@ const Home: NextPage = () => {
   const [userAuth , setuserAuth] = useState<boolean>(false);
 
   useEffect(() => {
-    let auth_value : boolean = (localStorage.getItem("signedIn") === 'true')
+    let auth_value : boolean = (localStorage.getItem("authenticated") === 'true')
     setuserAuth(auth_value)
     if (auth_value){
       router.push('/home')

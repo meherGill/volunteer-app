@@ -14,9 +14,15 @@ const Login: NextPage = () => {
         .value,
       isOrg: checkboxVal,
     };
-    console.log("ok");
+    console.log(JSONObject);
     return axios.post(URL_TO_LOGIN, JSONObject).then((val) => {
       console.log(val);
+      if (val.status === 200) {
+        console.log("wowowo");
+        localStorage.setItem("authenticated", "true");
+      } else {
+        localStorage.setItem("authenticated", "false");
+      }
     });
   };
 
