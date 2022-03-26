@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { GetItemCommand, ScanCommand } from "@aws-sdk/client-dynamodb";
+import { GetItemCommand } from "@aws-sdk/client-dynamodb";
 
 import { dynamodb } from "@lib/dynamo-db";
 
