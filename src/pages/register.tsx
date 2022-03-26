@@ -1,5 +1,8 @@
+import axios from 'axios';
 import type { NextPage } from 'next'
-import React, { useState, useRef, useEffect, MutableRefObject, RefObject } from 'react';
+import React, { useState, useRef, useEffect, RefObject } from 'react';
+
+const URL_TO_REGISTER = "http://localhost:3000/api/account/user"
 
 const Register : NextPage = () => {
 
@@ -69,11 +72,22 @@ const Register : NextPage = () => {
                 "password" : (document.querySelector("#vol_password") as HTMLInputElement).value,
                 "phoneNumber" : (document.querySelector("#vol_phoneNumber") as HTMLInputElement).value,
             }
-            const myJSON = JSON.stringify(objectToSend)
-            console.log(myJSON)
+            // myJSON = JSON.stringify(objectToSend)
+            axios.post(URL_TO_REGISTER, objectToSend)
         }
         else{
-            
+            let objectToSend = {
+                "accountType" : "Organisation",
+                "name" : (document.querySelector("#org_name") as HTMLInputElement).value,
+                "type" : (document.querySelector("#org_type") as HTMLInputElement).value,
+                "email" : (document.querySelector("#org_email") as HTMLInputElement).value,
+                "password" : (document.querySelector("#org_password") as HTMLInputElement).value,
+                "phoneNumber" : (document.querySelector("#org_phoneNumber") as HTMLInputElement).value,
+            }
+            const myJSON = JSON.stringify(objectToSend)
+            axios.post(URL_TO_REGISTER, myJSON).then((val) => {
+                console.log(val)
+            })
         }
     }
 
@@ -117,23 +131,23 @@ const Register : NextPage = () => {
                 </div>
                 <div className="m-2">
                     <label htmlFor="business_email">Email</label><br/>
-                    <input className="rounded-sm bg-btn-500" type="email" name="business_email"></input>
+                    <input id="org_email" className="rounded-sm bg-btn-500" type="email" name="business_email"></input>
                 </div>
                 <div className="m-2">
                     <label htmlFor='type'>Type</label><br/>
-                    <input className="rounded-sm bg-btn-500" type="text" name="type"></input>
+                    <input id="org_type" className="rounded-sm bg-btn-500" type="text" name="type"></input>
                 </div>
                 <div className="m-2">
                     <label htmlFor="website">Website</label><br/>
-                    <input className="rounded-sm bg-btn-500" type="text" name="website"></input>
+                    <input id="org_website" className="rounded-sm bg-btn-500" type="text" name="website"></input>
                 </div>
                 <div className="m-2">
                     <label htmlFor="phoneNumber">phone number</label><br/>
-                    <input className="rounded-sm bg-btn-500" type="tel" name="phoneNumber"></input>
+                    <input id="org_phoneNumber" className="rounded-sm bg-btn-500" type="tel" name="phoneNumber"></input>
                 </div>
                 <div className="m-2">
                     <label htmlFor="business_password">Password</label><br/>
-                    <input className="rounded-sm bg-btn-500" type="password" name="business_password"></input>
+                    <input id="org_password" className="rounded-sm bg-btn-500" type="password" name="business_password"></input>
                 </div>
                 <div className="m-2">
                     <label htmlFor="business_confirmPassword">Confirm Password</label><br/>
