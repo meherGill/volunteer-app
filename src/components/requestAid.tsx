@@ -69,8 +69,14 @@ const RequestAid = () => {
                 </div>
                 </form>
             </div>
-        </div>
-    )
-}
+            <button
+              onClick={handleSubmitForAid}
+              className="bg-green-200 p-3 rounded-sm mt-10"
+            >
+              SUBMIT REQUEST FOR AID
+            </button>
+          </div>
+  );
+};
 
-export default RequestAid
+export default RequestAid;

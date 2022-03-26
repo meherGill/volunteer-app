@@ -1,0 +1,5 @@
+curl -d '{"orgEmail":"helpline@email.com", "title":"test", "about":"abcd"}' -H 'Content-Type: application/json' "localhost:3000/api/campaign"
+
+curl -d '{"accountType":"", "title":"test", "about":"abcd"}' -H 'Content-Type: application/json' "localhost:3000/api/campaign"
+
+curl -d '{"email":"alice.s@email.com", "password":"abcde", "accountType":"Volunteer"}' -H 'Content-Type: application/json' "localhost:3000/api/account/login"
