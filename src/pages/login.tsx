@@ -18,6 +18,7 @@ const Login: NextPage = () => {
 			if (val.status === 200){
 				console.log("wowowo")
 				localStorage.setItem("authenticated", "true")
+				// localStorage.setItem("accountType" , val.)
 			}
 			else{
 				localStorage.setItem("authenticated", "false");
