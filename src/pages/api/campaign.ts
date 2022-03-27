@@ -44,7 +44,7 @@ const handleGetRequest = async (_: NextApiRequest, res: NextApiResponse) => {
 };
 
 const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { title, description, address, orgEmail } = req.body;
+  const { title, description, address, orgEmail, lat, lng } = req.body;
 
   if (!title || !description || !address || !orgEmail) {
     res.status(400).send("One or more fields are missing");
@@ -53,20 +53,24 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   const putParams = {
     Item: {
       _id: {
-        S: uuidv4(),
-      },
-      orgEmail: {
-        S: orgEmail,
+        S: uuidv4()
       },
       title: {
-        S: title,
+        S: title
       },
-      description: {
-        S: description,
+      orgEmail: {
+        S: orgEmail
       },
-      address: {
-        S: address,
-      },
+      location: {
+        M: {
+          lat: {
+            S: lat
+          },
+          lng: {
+            S: lng
+          }
+        }
+      }
     },
     TableName: TABLE_NAME,
   };
@@ -79,6 +83,9 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
       .status(response.$metadata.httpStatusCode!)
       .send("Campaign created created");
   } catch (err) {
+    console.log(err)
+    console.log(putParams)
+    console.log(req.body)
     res.status(409).send(err);
   }
 };

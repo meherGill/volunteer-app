@@ -1,12 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import axios from "axios";
 
-const latLong = {
-  lng: 151.04661363979582,
-  lat: -33.715751380693824,
-};
-
-const markers = [];
+let markers : Array<{lat: number, lng: number}>= [];
 
 const GCP_API_KEY = "AIzaSyBFvNDoVEJqDkF_pMJOBBMl97FLhpSJJ6A";
 
@@ -14,6 +10,10 @@ interface IGMapsProps {
   width: string;
   height: string;
 }
+
+let latLong = {lat: -33.715751380693824, lng: 151.04661363979582}
+const URL_FOR_CAMPAIGNS = "http://localhost:3000/api/campaign";
+
 const GMaps = (props: IGMapsProps) => {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -22,7 +22,7 @@ const GMaps = (props: IGMapsProps) => {
 
   const [forceRender, setForceRender] = useState(-1);
   const [map, setMap] = useState(null);
-
+  const [markerVals , setMarkerVals] = useState<any>([])
   const containerStyle = {
     width: props.width,
     height: props.height,
@@ -36,7 +36,32 @@ const GMaps = (props: IGMapsProps) => {
   const onUnmount = useCallback(function callback(map) {
     setMap(null);
   }, []);
+  
+  useEffect(() => {
+    axios.get(URL_FOR_CAMPAIGNS).then(res => {
+      console.log("next")
+      let arr = res.data
+      for (let i = 0; i  < res.data.length; i++){
+        let mapVals = res.data[i].location.M
+        console.log(mapVals)
+        let obj = {
+          lat: parseFloat(mapVals.lat.S),
+          lng: parseFloat(mapVals.lng.S),
+        }
+        // console.log(obj)
+        markers.push(obj)
+      }
+      setMarkerVals(markers)
+    })
+  }, [])
 
+  const getMarkerObject = () => {
+    const markers = [...markerVals];
+    console.log(markers)
+    return markers.map(val => (
+      <Marker position={{lat: val.lat, lng: val.lng}} />
+    ))
+  }
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
@@ -45,7 +70,7 @@ const GMaps = (props: IGMapsProps) => {
       onLoad={onLoad}
       onUnmount={onUnmount}
     >
-      {/* {console.log(latLong)} */}
+      {getMarkerObject()}
     </GoogleMap>
   ) : (
     <></>

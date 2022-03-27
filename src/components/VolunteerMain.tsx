@@ -5,13 +5,6 @@ import GMaps from './GMaps';
 import ProfilePicture from './ProfilePicture';
 import RequestAid from './requestAid';
 
-enum Components {
-  MAP = "map",
-  STATS = "stats",
-  REQUEST_AID = "request aid",
-  DONATE = "donate",
-}
-
 const MainUser = () => {
     
     const [width, setWidth] = useState("");
@@ -44,7 +37,7 @@ const MainUser = () => {
     }
 
     const showCommunity = () => {
-
+        
     }
 
     return(

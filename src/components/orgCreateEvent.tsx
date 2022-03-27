@@ -1,4 +1,9 @@
+import axios from "axios";
 import React from "react";
+import Geocode from "react-geocode";
+
+const GCP_API_KEY = "AIzaSyBFvNDoVEJqDkF_pMJOBBMl97FLhpSJJ6A";
+const URL_FOR_CAMPAIGNS = "http://localhost:3000/api/campaign";
 
 const OrgCreateEvent = () => {
     const onSubmitHandler = (e: any) => {
@@ -6,14 +11,35 @@ const OrgCreateEvent = () => {
     }
 
     const createEvent = () => {
+        Geocode.setApiKey(GCP_API_KEY)
         let title = (document.querySelector("#org_createevent_title") as HTMLInputElement).value
         let description = (document.querySelector("#org_createevent_dscr") as HTMLInputElement).value
         let isVirtual = (document.querySelector("#org_createevent_isVirtual") as HTMLInputElement).checked
         let address = (document.querySelector("#org_createevent_address") as HTMLInputElement).value
-        let JSON = {}
-        if (isVirtual){
-            
-        }
+        let data = JSON.parse(localStorage.getItem("userData") as string);
+        // console.log(data)
+        Geocode.fromAddress(address).then(res => {
+            // console.log("h")
+            const { lat, lng } = res.results[0].geometry.location;
+            let jsonData = {
+                title:  title,
+                description: description,
+                address: address,
+                orgEmail : data.email,
+                lat: lat.toString(),
+                lng: lng.toString(),
+            }
+
+            axios.post(URL_FOR_CAMPAIGNS, jsonData).then(res => {
+                console.log(res)
+                if (res.status == 200){
+                    alert("Even successfully posted")
+                }
+            })
+        }, err => {
+            console.log(err)
+            alert("Incorrect address")
+        })
     }
 
     return(
