@@ -3,7 +3,7 @@ import AppBar from "../components/AppBar";
 import MainUser from "@components/VolunteerMain";
 import { useEffect, useState } from "react";
 
-const Home: NextPage = () => {
+const VolunteerHome: NextPage = () => {
 
     const [authenticated, setAuthenticated] = useState(0)
     const whatToReturn = () => {
@@ -46,4 +46,4 @@ const Home: NextPage = () => {
     );
 };
 
-export default Home;
+export default VolunteerHome;

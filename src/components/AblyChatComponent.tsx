@@ -2,15 +2,24 @@ import React, { useEffect, useState } from 'react';
 import { useChannel } from "./AblyReactEffect";
 import styles from './AblyChatComponent.module.css';
 
-const AblyChatComponent = () => {
+interface IChatProps{
+    email1: string,
+    email2: string,
+}
+
+const AblyChatComponent = (props: IChatProps) => {
     let inputBox : any = null;
     let messageEnd : any = null;
 
+    let channel_name = ""
+    let temp_arr = [props.email1 , props.email2].sort();
+    channel_name = temp_arr.join("-");
+    
     const [messageText, setMessageText] = useState("");
     const [receivedMessages, setMessages] = useState([""]);
     const messageTextIsEmpty = messageText.trim().length === 0;
 
-    const [channel , ably] = useChannel("chat", (message : any) => {
+    const [channel , ably] = useChannel(channel_name, (message : any) => {
         const history = receivedMessages.slice(-199);
         setMessages([...history, message])
     })

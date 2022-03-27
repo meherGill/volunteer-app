@@ -81,6 +81,7 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
       .status(response?.$metadata?.httpStatusCode!)
       .send("Organiztion account successfully created");
   } catch (err) {
+    console.log(err);
     res.status(409).send(err);
   }
 };

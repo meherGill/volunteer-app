@@ -27,3 +27,18 @@ a {
   color: #007980;
   font-weight: bold;
 }
+
+.org_grid {
+  display: grid;
+  grid-template-columns: 200px 1fr 200px;
+  height: 100%;
+}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.org_activeTab{
+  color: azure;
+  background-color: rgb(14 116 144 / var(--tw-bg-opacity));
+}

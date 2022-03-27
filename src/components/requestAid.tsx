@@ -51,8 +51,8 @@ const RequestAid = () => {
                 <div className="flex flex-col justify-center items-center mt-6">
                     <div className="flex flex-col w-11/12">
                         <label className="form-label">Description</label>
-                        <textarea id="requestAid_description" className="form-control bg-btn-500 text-sFont-500 placeholder:text-gray-700 border-2 rounded-md p-2 border-bg1-500
-                            " 
+                        <textarea id="requestAid_description" 
+                        className="form-control bg-btn-500 text-sFont-500 placeholder:text-gray-700 border-2 rounded-md p-2 border-bg1-500" 
                         placeholder="Write about your problem here"
                         rows={5}></textarea>
                     </div>
@@ -69,12 +69,7 @@ const RequestAid = () => {
                 </div>
                 </form>
             </div>
-            <button
-              onClick={handleSubmitForAid}
-              className="bg-green-200 p-3 rounded-sm mt-10"
-            >
-              SUBMIT REQUEST FOR AID
-            </button>
+    
           </div>
   );
 };

@@ -45,7 +45,6 @@ const MainUser = () => {
   };
   return (
     <>
-      <div className="w-full h-16"></div>
       <div className="flex h-full w-full justify-start">
         <div className="flex flex-col w-64 bg-btn-500 border-solid border-t-2 border-gray-800 divide-y divide-gray-800">
           <div>
@@ -101,6 +100,13 @@ const MainUser = () => {
         </div>
         <div className="w-40 bg-bg2-500 p-2"></div>
       </div>
+      <div
+        id="contentContainer"
+        className="grow-3 focus:bg-gray-800 focus:text-bg2-500 bg-gray-800 x-divide-2 y-divide-2"
+      >
+        {showComponent()}
+      </div>
+      <div className="w-40 bg-bg2-500 p-2"></div>
     </>
   );
 };
