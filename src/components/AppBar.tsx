@@ -1,29 +1,38 @@
 import { useRouter } from "next/router"
-
+import ProfilePicture from "./ProfilePicture"
+import { SearchIcon } from "@heroicons/react/solid"
 
 const AppBar = () => {
     const router = useRouter()
     
     const handleSignOut = () => {
+        
             if (typeof window !== undefined){
             localStorage.clear()
             router.push("/")
         }
     }
     return(
-        <>
-            <div className="flex fixed w-full h-16 bg-cyan-500 justify-start p-2 z-10">
-                <div className='grow-3'>
-                    <input className="rounded-sm w-full h-full p-0 m-0"></input>
+        <>  
+        <div>
+            <div className="relative h-56 p-2 z-10">
+                <div className="absolute top-3 right-2">
+                    <ProfilePicture imgLocation="/profilePic.jpeg"></ProfilePicture>
+                    <button className="absolute p-2 text-red-500 z-10" onClick={handleSignOut}>SIGN OUT</button>
                 </div>
-                <div className='ml-3 grow-1'>
-                    <div className="flex flex-row justify-around items-center">
-                        <p>profile</p>
-                        <button className="p-2 bg-red-700 rounded-md text-sky-50" onClick={handleSignOut}>sign out</button>
+                <div className="absolute bottom-0 w-full">
+                    <h1 className="font-sans text-3xl">Explore</h1>
+                    <h2 className="mt-2 font-sans text-gray-400">Give Support or Get Help</h2>
+                    <div className="mt-10 w-full flex justify-center">
+                        <div className="flex w-full p-2 items-center pr-4">
+                            <input type="text" placeholder="Search Organisation or campaign" 
+                                className="w-full p-1 bg-orange-100"></input>
+                            <button className="relative right-8 w-8 h-8 rounded-sm bg-green-300"><SearchIcon /></button>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div className='w-full h-16'></div>
+        </div>
         </>
     )
 }

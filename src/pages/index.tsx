@@ -13,7 +13,13 @@ const Home: NextPage = () => {
     let auth_value : boolean = (localStorage.getItem("authenticated") === 'true')
     setuserAuth(auth_value)
     if (auth_value){
-      router.push('/home')
+      let account_type : string = localStorage.getItem("accountType") as string;
+      if (account_type === "volunteer"){
+        router.push('/VolunteerHome')
+      }
+      else{
+        router.push('/OrganisationHome')
+      }
     }
     else{
       router.push("/login")

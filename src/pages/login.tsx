@@ -21,18 +21,22 @@ const Login: NextPage = () => {
 		return axios.post(URL_TO_LOGIN, JSONObject).then((val) => {
 		  console.log(val);
 		  if (val.status === 200) {
-			console.log("wowowo");
-			localStorage.setItem("authenticated", "true");
-			localStorage.setItem("accountType" , val.data.accountType)
-			let responseJson = val.data;
-			localStorage.setItem("userData", JSON.stringify(responseJson))
+        console.log("wowowo");
+        localStorage.setItem("authenticated", "true");
+        localStorage.setItem("accountType" , val.data.accountType)
+        let responseJson = val.data;
+        localStorage.setItem("userData", JSON.stringify(responseJson))
 
-			if (val.data.accountType === "volunteer"){
-				console.log("hmm")
-				router.push("/VolunteerHome")
-			}
-		  } else {
-			localStorage.clear();
+        if (val.data.accountType === "volunteer"){
+          console.log("hmm")
+          router.push("/VolunteerHome")
+        }
+        else{
+          router.push("/OrganisationHome")
+        }
+		  } 
+      else {
+			  localStorage.clear();
 		  }
 		});
 	  };

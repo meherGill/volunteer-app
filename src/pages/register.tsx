@@ -99,10 +99,16 @@ const Register : NextPage = () => {
                 "phone" : (document.querySelector("#org_phoneNumber") as HTMLInputElement).value,
                 "website" : (document.querySelector("#org_website") as HTMLInputElement).value,
             }
-            const myJSON = JSON.stringify(objectToSend)
-            return axios.post(URL_TO_REGISTER_ORGANISATION, myJSON).then((val) => {
+            return axios.post(URL_TO_REGISTER_ORGANISATION, objectToSend).then((val) => {
                 console.log(val)
-            }).catch(err => console.log(err))
+                if (val.status === 200){
+                    alert("User successfully registerd");
+                    Router.push("/login")
+                }
+            }).catch(err => {
+                console.log(err);
+                alert(`Sorry, there was an error ${err}`)
+            })
         }
     }
 

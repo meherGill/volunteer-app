@@ -1,10 +1,9 @@
-import type { NextPage } from "next";
-import { useEffect, useState } from "react";
-
-import GMaps from "./GMaps";
-import ProfilePicture from "./ProfilePicture";
-import RequestAid from "./requestAid";
-import Donate from "@components/Donate";
+import type { NextPage } from 'next';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+import GMaps from './GMaps';
+import ProfilePicture from './ProfilePicture';
+import RequestAid from './requestAid';
 
 enum Components {
   MAP = "map",
@@ -14,101 +13,77 @@ enum Components {
 }
 
 const MainUser = () => {
-  const [width, setWidth] = useState("");
-  const [height, setHeight] = useState("");
-  const [selectedItem, setSelectedItem] = useState("");
+    
+    const [width, setWidth] = useState("");
+    const [height, setHeight] = useState("");   
+    const router = useRouter()
+    
+    useEffect(() => {
+        // let _height = window.innerHeight;
+        let _width = window.innerWidth;
 
-  useEffect(() => {
-    const element = document.querySelector("#contentContainer") as HTMLElement;
-    let styles = window.getComputedStyle(element);
-    let height: string = styles.height;
-    let width: string = styles.width;
-    console.log(height, width);
-    setWidth(width);
-    setHeight(height);
-    setSelectedItem(Components.REQUEST_AID);
-    const selectedComp = document.querySelector("#requestAid") as HTMLElement;
-    selectedComp.focus();
-  }, []);
+        if (_width > 1000){
+            setWidth("950px")
+        }
+        else{
+            setWidth((_width - 50) + "px")
+        }
+        setHeight("300px")
+    }, [])
 
-  const showComponent = () => {
-    console.log(process.env.GCP_API_KEY);
-    if (selectedItem === Components.STATS) {
-      return <div></div>;
-    } else if (selectedItem === Components.MAP) {
-      return <GMaps width={width} height={height} />;
-    } else if (selectedItem === Components.DONATE) {
-      return <Donate />;
-    } else if (selectedItem === Components.REQUEST_AID) {
-      return <RequestAid />;
+    const showQuickDonate = () => {
+        router.push("/quickDonate")
     }
-  };
-  return (
-    <>
-      <div className="flex h-full w-full justify-start">
-        <div className="flex flex-col w-64 bg-btn-500 border-solid border-t-2 border-gray-800 divide-y divide-gray-800">
-          <div>
-            <ProfilePicture imgLocation="/profilePic.jpeg" />
-          </div>
-          <div>
-            <button
-              onClick={() => {
-                setSelectedItem(Components.MAP);
-              }}
-              className="h-24 w-full focus:bg-gray-800 active:text-bg2-500 hover:bg-rose-200"
-            >
-              Find Nearby Opportunities
-            </button>
-          </div>
-          <div>
-            <button
-              onClick={() => {
-                setSelectedItem(Components.DONATE);
-              }}
-              className="h-24 w-full focus:bg-gray-800 focus:text-bg2-500 hover:bg-rose-200"
-            >
-              Quick Donate
-            </button>
-          </div>
-          <div>
-            <button
-              onClick={() => {
-                setSelectedItem(Components.REQUEST_AID);
-              }}
-              id="requestAid"
-              className="h-24 w-full focus:bg-gray-800 focus:text-bg2-500 hover:bg-rose-200"
-            >
-              REQUEST AID
-            </button>
-          </div>
-          <div>
-            <button
-              onClick={() => {
-                setSelectedItem(Components.STATS);
-              }}
-              className="h-24 w-full focus:bg-gray-800 focus:text-bg2-500 hover:bg-rose-200"
-            >
-              STATS
-            </button>
-          </div>
-        </div>
-        <div
-          id="contentContainer"
-          className="grow-3 focus:bg-gray-800 focus:text-bg2-500 bg-gray-800 x-divide-2 y-divide-2"
-        >
-          {showComponent()}
-        </div>
-        <div className="w-40 bg-bg2-500 p-2"></div>
-      </div>
-      <div
-        id="contentContainer"
-        className="grow-3 focus:bg-gray-800 focus:text-bg2-500 bg-gray-800 x-divide-2 y-divide-2"
-      >
-        {showComponent()}
-      </div>
-      <div className="w-40 bg-bg2-500 p-2"></div>
-    </>
-  );
-};
+
+    const showRequestAid = () => {
+        router.push("/requestAid")
+    }
+
+    const showImpact = () => {
+
+    }
+
+    const showCommunity = () => {
+
+    }
+
+    return(
+        <>
+            <div className='flex justify-center mt-10'>
+                <GMaps width={width} height={height}/> 
+            </div>
+            <div className='flex flex-col justify-start items-center'>
+                <div className='w-full mt-8 pl-2 '><h2 className='text-2xl font-bold font-sans'>Quick Access</h2></div>
+                <div className='max-w-md grid grid-rows-2 grid-cols-2 gap-4 mt-6 mb-10'>
+                        <div className="flex justify-center items-center">
+                            <button className='rounded-md w-40 h-24 bg-gradient-to-tr from-indigo-300 to-cyan-500'
+                                onClick={showQuickDonate}>
+                                    
+                                Quick Donate
+                            </button>
+                        </div>
+                        <div className="flex justify-center items-center">
+                            <button className='rounded-md w-40 h-24 bg-gradient-to-tr from-amber-500 to-orange-200'
+                                onClick={showRequestAid}>
+                                Request Aid
+                            </button>
+                        </div>
+                        <div className="flex justify-center items-center">
+                            <button className='rounded-md w-40 h-24 bg-gradient-to-tr from-red-200 to-orange-500'
+                                onClick={showImpact}>
+                                Your Impact
+                            </button>
+                        </div>
+                        <div className="flex justify-center items-center">
+                            <button className='rounded-md w-40 h-24 bg-gradient-to-tr from-indigo-300 to-cyan-500'
+                                onClick={showCommunity}>
+                                Community
+                            </button>
+                        </div>
+                </div>
+            </div>
+        </>
+    )
+}
 
 export default MainUser;
