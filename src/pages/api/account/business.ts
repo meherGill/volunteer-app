@@ -82,6 +82,7 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
       .send("Organiztion account successfully created");
   } catch (err) {
     console.log(err);
+    console.log(putParams)
     res.status(409).send(err);
   }
 };

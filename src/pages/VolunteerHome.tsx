@@ -9,9 +9,13 @@ const VolunteerHome: NextPage = () => {
     const whatToReturn = () => {
         if (authenticated === 1){
             return(
-                <div className="w-screen h-screen">
-                <AppBar />
-                <MainUser />
+                <div className="w-full h-full">
+                    <div className="flex justify-center items-center bg-orange-50">
+                        <div className="max-w-lg h-full">
+                            <AppBar />
+                            <MainUser />
+                        </div>
+                    </div>
                 </div>
             )
         }
@@ -40,9 +44,9 @@ const VolunteerHome: NextPage = () => {
     }, [])
 
     return (
-        <>
+        <div className="bg-white">
             {whatToReturn()}
-        </>
+        </div>
     );
 };
 

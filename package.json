@@ -11,6 +11,7 @@
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.56.0",
     "@googlemaps/react-wrapper": "^1.1.28",
+    "@heroicons/react": "^1.0.6",
     "@react-google-maps/api": "^2.7.0",
     "@types/react-geocode": "^0.2.0",
     "ably": "^1.2.5-beta.1",
