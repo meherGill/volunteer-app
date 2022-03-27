@@ -12,7 +12,7 @@ const Chat = (props : IChatProps) => {
     return(
         <div>
             <h1>CHAT</h1>
-            <AblyChatComponent />
+            <AblyChatComponent email1={props.email1} email2={props.email2}/>
         </div>
     )
 }

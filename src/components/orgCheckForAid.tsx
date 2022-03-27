@@ -8,7 +8,7 @@ interface jsonData {
 
 const mockData = [
     {
-        userEmail : "abc@gmail.com",
+        userEmail : "t@b.com",
         location: "abc xyz",
         description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
     },
@@ -36,6 +36,10 @@ const mockData = [
 
 const OrgCheckForAid = () => {
 
+    const contactUser = (data : Array<jsonData>, ndx : number) => {
+        
+    };
+
     const getComponents = (data: Array<jsonData>) => {
         return data.map((val , ndx) => {
             return (
@@ -43,7 +47,7 @@ const OrgCheckForAid = () => {
                     <h2 className="bg-orange-200 w-full font-bold p-3 rounded-lg">{val.userEmail}</h2>
                     <p className="p-3">{val.description}</p>
                     <p className="p-3">{val.location === "" ? "Location not provided"  : "Address : " + val.location}</p>
-                    <button className="absolute bottom-3 right-3 p-2 bg-cyan-300 hover:bg-cyan-700 hover:text-white rounded-md">Contact User</button>
+                    <button onClick={() => {contactUser(data , ndx)}} className="absolute bottom-3 right-3 p-2 bg-cyan-300 hover:bg-cyan-700 hover:text-white rounded-md">Contact User</button>
                 </li>
             )
         })
