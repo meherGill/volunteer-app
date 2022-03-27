@@ -6,10 +6,10 @@ import ProfilePicture from './ProfilePicture';
 import RequestAid from './requestAid';
 
 enum Components {
-    MAP = "map",
-    STATS = "stats",
-    REQUEST_AID = "request aid",
-    DONATE = "donate",
+  MAP = "map",
+  STATS = "stats",
+  REQUEST_AID = "request aid",
+  DONATE = "donate",
 }
 
 const MainUser = () => {
