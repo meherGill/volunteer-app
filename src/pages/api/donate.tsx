@@ -1,4 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import Stripe from "stripe";
+
+import { formatAmountForStripe } from "@utils/stripe-helpers";
+
 const stripe = require("stripe")(
   "sk_test_51KhjQ7KsYhlOpBjGs4DvZ8y7siLOdt4BxY53BAV0wXilY9UC1OATtcb5ELWR54AgJqSGywSl0EE0hCDhqvavHGTD00QRD9FTVi"
 );
@@ -9,26 +13,39 @@ export default async function handler(
 ) {
   switch (req.method) {
     case "POST":
+      const amount: number = req.body.amount;
+      const CURRENCY = "aud";
+
       try {
         // Create Checkout Sessions from body params.
-        const session = await stripe.checkout.sessions.create({
+        const params: Stripe.Checkout.SessionCreateParams = {
+          submit_type: "donate",
+          payment_method_types: ["card"],
           line_items: [
             {
-              // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-              price: "{{PRICE_ID}}",
+              name: "Custom amount donation",
+              amount: formatAmountForStripe(amount, CURRENCY),
+              currency: CURRENCY,
               quantity: 1,
             },
           ],
-          mode: "payment",
-          success_url: `${req.headers.origin}/?success=true`,
-          cancel_url: `${req.headers.origin}/?canceled=true`,
-        });
-        res.redirect(303, session.url);
+          success_url: `${req.headers.origin}/result?session_id={CHECKOUT_SESSION_ID}`,
+          cancel_url: `${req.headers.origin}/donate-with-checkout`,
+        };
+
+        const checkoutSession: Stripe.Checkout.Session =
+          await stripe.checkout.sessions.create(params);
+
+        res.status(200).json(checkoutSession);
       } catch (err) {
-        res.status(err.statusCode || 500).json(err.message);
+        const errorMessage =
+          err instanceof Error ? err.message : "Internal server error";
+        res.status(500).json({ statusCode: 500, message: errorMessage });
       }
       break;
+
     default:
-      res.status(404).json({ success: false });
+      res.setHeader("Allow", "POST");
+      res.status(405).end("Method Not Allowed");
   }
 }
