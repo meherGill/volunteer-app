@@ -37,3 +37,8 @@ a {
 .card {
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
+
+.org_activeTab{
+  color: azure;
+  background-color: rgb(14 116 144 / var(--tw-bg-opacity));
+}

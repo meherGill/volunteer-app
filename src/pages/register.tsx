@@ -3,7 +3,8 @@ import type { NextPage } from 'next'
 import Router from 'next/router';
 import React, { useState, useRef, useEffect, RefObject } from 'react';
 
-const URL_TO_REGISTER = "http://localhost:3000/api/account/user"
+const URL_TO_REGISTER_VOLUNTEER = "http://localhost:3000/api/account/user"
+const URL_TO_REGISTER_ORGANISATION = "http://localhost:3000/api/account/business"
 
 const Register : NextPage = () => {
 
@@ -76,7 +77,7 @@ const Register : NextPage = () => {
             console.log(objectToSend);
             // NEED TO REFACTOR THIS
             // NOT DRY
-            return axios.post(URL_TO_REGISTER, objectToSend).then((val) => {
+            return axios.post(URL_TO_REGISTER_VOLUNTEER, objectToSend).then((val) => {
                 console.log(val)
 
                 if (val.status === 200){
@@ -96,9 +97,10 @@ const Register : NextPage = () => {
                 "email" : (document.querySelector("#org_email") as HTMLInputElement).value,
                 "password" : (document.querySelector("#org_password") as HTMLInputElement).value,
                 "phone" : (document.querySelector("#org_phoneNumber") as HTMLInputElement).value,
+                "website" : (document.querySelector("#org_website") as HTMLInputElement).value,
             }
             const myJSON = JSON.stringify(objectToSend)
-            return axios.post(URL_TO_REGISTER, myJSON).then((val) => {
+            return axios.post(URL_TO_REGISTER_ORGANISATION, myJSON).then((val) => {
                 console.log(val)
             }).catch(err => console.log(err))
         }

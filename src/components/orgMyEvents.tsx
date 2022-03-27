@@ -36,9 +36,9 @@ const mockData = [
 ]
 const OrgMyEvents = () => {
 
-    const getComponents = (mockData: Array<jsonData>) : any => {
-        console.log(mockData)
-        return mockData.map((val , ndx) => {
+    const getComponents = (data: Array<jsonData>) : any => {
+        console.log(data)
+        return data.map((val , ndx) => {
             return (
                 <li key={val.title} className="flex flex-col w-full items-start justify-center rounded-sm card p-2 my-3">
                     <h2 className="bg-orange-200 w-full font-bold p-3 rounded-lg">{val.title}</h2>

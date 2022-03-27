@@ -48,17 +48,17 @@ const OrgHome: NextPage = () => {
             <AppBar />
             <div className="org_grid">
                 <div className="org_sidebar flex flex-col divide-y-2 bg-cyan-500">
-                    <button onClick={() => orgButtonHandler(OrgComponents.CREATE_EVENT)} className="bg-cyan-700 text-indigo-50 hover:bg-cyan-300 h-24 w-full"> 
+                    <button id="org_createEvent" onClick={() => orgButtonHandler(OrgComponents.CREATE_EVENT)} className={(selectedComponent === OrgComponents.CREATE_EVENT ? "bg-cyan-700 text-indigo-50 " : "") + "hover:bg-cyan-300 h-24 w-full"}> 
                         Create Event 
                     </button>
-                    <button onClick={() => orgButtonHandler(OrgComponents.CHECK_FOR_AID)} className="hover:bg-cyan-300 h-24 w-full"> 
+                    <button id="org_checkForAid" onClick={() => orgButtonHandler(OrgComponents.CHECK_FOR_AID)} className={(selectedComponent === OrgComponents.CHECK_FOR_AID ? "bg-cyan-700 text-indigo-50 " : "") + "hover:bg-cyan-300 h-24 w-full"}> 
                         Check who needs AID
                     </button>
-                    <button onClick={() => orgButtonHandler(OrgComponents.MY_EVENTS)} className="hover:bg-cyan-300 h-24 w-full">
+                    <button id="org_myEvents" onClick={() => orgButtonHandler(OrgComponents.MY_EVENTS)} className={(selectedComponent === OrgComponents.MY_EVENTS ? "bg-cyan-700 text-indigo-50 " : "") + "hover:bg-cyan-300 h-24 w-full"}>
                         My Events
                     </button>
-                    <button onClick={() => orgButtonHandler(OrgComponents.DONATIONS)} className="hover:bg-cyan-300 h-24 w-full">
-                        Donations
+                    <button id="org_pendingDonations" onClick={() => orgButtonHandler(OrgComponents.DONATIONS)} className={(selectedComponent === OrgComponents.DONATIONS ? "bg-cyan-700 text-indigo-50 " : "") + "hover:bg-cyan-300 h-24 w-full"}>
+                        Pending Donations
                     </button>
                 </div>
                 <div className="org_content">
