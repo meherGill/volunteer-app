@@ -55,7 +55,6 @@ const MainUser = () => {
     }
     return(
         <>
-        <div className='w-full h-16'></div>
         <div className="flex h-full w-full justify-start">
             <div className="flex flex-col w-64 bg-btn-500 border-solid border-t-2 border-gray-800 divide-y divide-gray-800">
                 <div>

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import type { NextPage } from 'next'
+import Router from 'next/router';
 import React, { useState, useRef, useEffect, RefObject } from 'react';
 
 const URL_TO_REGISTER = "http://localhost:3000/api/account/user"
@@ -73,9 +74,18 @@ const Register : NextPage = () => {
                 "phone" : (document.querySelector("#vol_phoneNumber") as HTMLInputElement).value,
             }
             console.log(objectToSend);
-            // const myJSON = JSON.stringify(objectToSend)
+            // NEED TO REFACTOR THIS
+            // NOT DRY
             return axios.post(URL_TO_REGISTER, objectToSend).then((val) => {
                 console.log(val)
+
+                if (val.status === 200){
+                    alert("User successfully registerd");
+                    Router.push("/login")
+                }
+            }).catch(err => {
+                console.log(err);
+                alert(`Sorry, there was an error ${err}`)
             })
         }
         else{
@@ -90,7 +100,7 @@ const Register : NextPage = () => {
             const myJSON = JSON.stringify(objectToSend)
             return axios.post(URL_TO_REGISTER, myJSON).then((val) => {
                 console.log(val)
-            })
+            }).catch(err => console.log(err))
         }
     }
 
