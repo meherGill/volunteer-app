@@ -4,6 +4,7 @@ import AppBar from "@components/AppBar";
 import OrgCreateEvent from "@components/orgCreateEvent";
 import OrgCheckForAid from "@components/orgCheckForAid";
 import OrgMyEvents from "@components/orgMyEvents";
+import PendingDonations from "@components/PendingDonations";
 
 enum OrgComponents {
     CREATE_EVENT = 1,
@@ -34,7 +35,7 @@ const OrgHome: NextPage = () => {
         }
         else if(val === OrgComponents.DONATIONS){
             return(
-                <div></div>
+                <PendingDonations />
             )
         }
     }
