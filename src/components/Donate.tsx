@@ -4,10 +4,7 @@ import { Elements } from "@stripe/react-stripe-js";
 
 import DonateForm from "@components/DonateForm";
 
-const STRIPE_PUBLISHABLE_KEY =
-  "pk_test_51KhjQ7KsYhlOpBjGdEpalmpo9k6XobICJjoRz1Wjh3H3gtSbtZJTwTCTcCXDVdkUbU2Q7IFGCML6xH49HI3eslZo00xahWSwQn";
-
-const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
+// const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
 
 const Donate = () => {
   // Make sure to call loadStripe outside of a component’s render to avoid
@@ -36,15 +33,7 @@ const Donate = () => {
     appearance,
   };
 
-  return (
-    <>
-      {clientSecret && (
-        <Elements options={options} stripe={stripePromise}>
-          <DonateForm />
-        </Elements>
-      )}
-    </>
-  );
+  return <></>;
 };
 
 export default Donate;
