@@ -1,5 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { PutItemCommand, ScanCommand } from "@aws-sdk/client-dynamodb";
+import {
+  PutItemCommand,
+  ScanCommand,
+  DeleteItemCommand,
+} from "@aws-sdk/client-dynamodb";
 import { v4 as uuidv4 } from "uuid";
 
 import { dynamodb } from "@lib/dynamo-db";
@@ -17,6 +21,10 @@ export default async function handler(
 
     case "POST":
       handlePostRequest(req, res);
+      break;
+
+    case "DELETE":
+      handleDeleteRequest(req, res);
       break;
 
     default:
@@ -53,24 +61,27 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   const putParams = {
     Item: {
       _id: {
-        S: uuidv4()
+        S: uuidv4(),
       },
       title: {
-        S: title
+        S: title,
       },
       orgEmail: {
-        S: orgEmail
+        S: orgEmail,
+      },
+      description: {
+        S: description,
       },
       location: {
         M: {
           lat: {
-            S: lat
+            S: lat,
           },
           lng: {
-            S: lng
-          }
-        }
-      }
+            S: lng,
+          },
+        },
+      },
     },
     TableName: TABLE_NAME,
   };
@@ -83,9 +94,39 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
       .status(response.$metadata.httpStatusCode!)
       .send("Campaign created created");
   } catch (err) {
-    console.log(err)
-    console.log(putParams)
-    console.log(req.body)
+    console.log(err);
+    console.log(putParams);
+    console.log(req.body);
     res.status(409).send(err);
   }
+};
+
+const handleDeleteRequest = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
+  const { _id } = req.query;
+
+  if (_id) {
+    const deleteItemByIdParams = {
+      Key: {
+        _id: {
+          S: _id.toString(),
+        },
+      },
+      TableName: TABLE_NAME,
+    };
+
+    const cmd = new DeleteItemCommand(deleteItemByIdParams);
+    try {
+      const response = await dynamodb.send(cmd);
+      if (!response) {
+        res.status(404).send(`No campagin record found with id ${_id}`);
+      }
+      // res.status(response.$metadata.httpStatusCode!).json(response);
+    } catch (err) {
+      res.status(409).send(err);
+    }
+  }
+  res.status(400).send("Missing field _id");
 };
