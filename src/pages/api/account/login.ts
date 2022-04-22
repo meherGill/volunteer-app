@@ -39,6 +39,7 @@ export default async function handler(
         const response = await dynamodb.send(command);
 
         if (!response.Item) {
+          console.log(response)
           res.status(405).send(`${accountType} account does not exist`);
         }
         if (response.Item?.password?.S !== password) {

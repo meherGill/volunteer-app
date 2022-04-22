@@ -2,97 +2,75 @@ import Link from "next/link";
 import type { NextPage } from "next";
 import axios from "axios";
 import { useRouter } from "next/router";
+import React, { useRef } from "react";
 
 const URL_TO_LOGIN = "http://localhost:3000/api/account/login";
-const Login: NextPage = () => {
-    const router = useRouter();
 
-	const handleLogin = (): Promise<void> => {
-		const checkboxVal = (
-		  document.querySelector("#login_isOrgAccount") as HTMLInputElement
-		).checked;
-		const JSONObject = {
-		  email: (document.querySelector("#login_email") as HTMLInputElement).value,
-		  password: (document.querySelector("#login_password") as HTMLInputElement)
-			.value,
-		  isOrg: checkboxVal,
-		};
-		console.log(JSONObject);
-		return axios.post(URL_TO_LOGIN, JSONObject).then((val) => {
-		  console.log(val);
-		  if (val.status === 200) {
+const Login: NextPage = () => {
+  const router = useRouter();
+  const checkboxRef = useRef<HTMLInputElement>(null);
+
+  const handleLogin = (): Promise<void> => {
+    const checkboxVal = checkboxRef.current?.checked;
+	console.log(checkboxVal)
+    const JSONObject = {
+      email: (document.querySelector("#login_email") as HTMLInputElement).value,
+      password: (document.querySelector("#login_password") as HTMLInputElement)
+        .value,
+      isOrg: checkboxVal,
+    };
+    console.log(JSONObject);
+    return axios.post(URL_TO_LOGIN, JSONObject).then((val) => {
+      console.log(val);
+      if (val.status === 200) {
         console.log("wowowo");
         localStorage.setItem("authenticated", "true");
-        localStorage.setItem("accountType" , val.data.accountType)
+        localStorage.setItem("accountType", val.data.accountType);
         let responseJson = val.data;
-        localStorage.setItem("userData", JSON.stringify(responseJson))
+        localStorage.setItem("userData", JSON.stringify(responseJson));
 
-        if (val.data.accountType === "volunteer"){
-          console.log("hmm")
-          router.push("/VolunteerHome")
+        if (val.data.accountType === "volunteer") {
+          console.log("hmm");
+          router.push("/VolunteerHome");
+        } else {
+          router.push("/OrganisationHome");
         }
-        else{
-          router.push("/OrganisationHome")
-        }
-		  } 
-      else {
-			  localStorage.clear();
-		  }
-		});
-	  };
-  
+      } else {
+        localStorage.clear();
+      }
+    });
+  };
 
-  return (
-    <div className="h-screen w-screen bg-bg1-500 flex justify-center items-center">
-      <div className="flex flex-col justify-around items-center rounded-md drop-shadow-xl w-150 h-64 bg-bg2-500">
-        <h1 className="h-5 text-2xl tracking-wider font-bold text-pFont-500">
-          LOGIN
-        </h1>
-        <div className="text-sFont">
-          <div className="w-full flex justify-end mb-2">
-            <label htmlFor="email" className="mr-4">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              className="bg-btn-500 rounded-md text-lFont-500"
-              id="login_email"
-            ></input>
-          </div>
-          <div className="w-full flex justify-end">
-            <label htmlFor="password" className="mr-4">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              className="bg-btn-500 rounded-md text-lFont-500"
-              id="login_password"
-            ></input>
-          </div>
-          <div className="w-full flex justify-end">
-            <label htmlFor="isOrgAccount">Organisation</label>
-            <input id="login_isOrgAccount" type="checkbox"></input>
-          </div>
-        </div>
 
-        <div className="flex">
-          <button className="bg-btn-500 w-36 h-8 mr-8 rounded-sm">
-            <Link href="/register">
-              <a>Register</a>
-            </Link>
-          </button>
-          <button
-            className="bg-btn-500 w-36 h-8 ml-8 rounded-sm"
-            onClick={handleLogin}
-          >
-            Login
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
+  return(
+	<div className="w-screen h-screen flex justify-center items-center">
+		<div className="flex flex-col justify-center items-center">
+			<img src="/logo.svg" className="w-10 h-10">
+			</img>
+			<h1 className="text-gray-800 text-bold text-3xl mb-5">Sign In</h1>
+			<div className="w-screen m-3 flex justify-center max-w-md">
+				<input id="login_email" className="input input-bordered bg-slate-100 w-10/12" placeholder="Email"></input>
+			</div>
+			<div className="w-screen m-3 flex justify-center max-w-md">
+				<input type="password" id="login_password" className="input input-bordered bg-slate-100 w-10/12" placeholder="Password"></input>
+			</div>
+			<div className="flex justify-around">
+				<label className="label-text mr-3">Organisation</label>
+				<input ref={checkboxRef} type="checkbox" className="checkbox ml-3 checkbox-accent"></input>
+			</div>
+			<div className="w-screen m-3 flex justify-center max-w-md">
+				<button onClick={handleLogin} className="btn w-10/12 bg-gradient-to-r from-accent to-neutral">
+					Sign In
+				</button>	
+			</div>
+			<p className="pt-5 text-center">
+				Don't have an account?<br/>
+					<Link href="/register"><a className="link link-primary">Register</a></Link><br/>
+					instead
+			</p>
+		</div>
+	</div>
+  )
+}
 
 export default Login;

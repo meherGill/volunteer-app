@@ -11,6 +11,7 @@ const Register : NextPage = () => {
     const [context, setContext] = useState("");
     const volunteerElem = useRef<HTMLHeadingElement>(null);
     const orgElem = useRef<HTMLHeadingElement>(null);
+    const checkboxRef = useRef(null);
 
     const switchContext = () => {
         // console.log(newContext)
@@ -22,49 +23,48 @@ const Register : NextPage = () => {
         }
     }
 
-    useEffect(() => {
-        let newRef : RefObject<HTMLHeadingElement>;
-        let oldRef : RefObject<HTMLHeadingElement>;
-        if (context === "Volunteer"){
-            newRef = volunteerElem
-            oldRef = orgElem
-        }
-        else if(context === "Organisation"){
-            newRef = orgElem
-            oldRef = volunteerElem
-        }
-        else if(context === ""){
-            console.log("first render")
-            newRef = volunteerElem;
-            oldRef = orgElem;
-        }
-        else{
-            console.error(`not supposed to happen, context value = ${context}`)
-            newRef = volunteerElem;
-            oldRef = orgElem;
-        }
+    // useEffect(() => {
+    //     let newRef : RefObject<HTMLHeadingElement>;
+    //     let oldRef : RefObject<HTMLHeadingElement>;
+    //     if (context === "Volunteer"){
+    //         newRef = volunteerElem
+    //         oldRef = orgElem
+    //     }
+    //     else if(context === "Organisation"){
+    //         newRef = orgElem
+    //         oldRef = volunteerElem
+    //     }
+    //     else if(context === ""){
+    //         console.log("first render")
+    //         newRef = volunteerElem;
+    //         oldRef = orgElem;
+    //     }
+    //     else{
+    //         console.error(`not supposed to happen, context value = ${context}`)
+    //         newRef = volunteerElem;
+    //         oldRef = orgElem;
+    //     }
 
-        let newElement = newRef.current as HTMLElement;
-        newElement.classList.remove("greyedOut");
-        if (!newElement.classList.contains("selected")){
-            newElement.classList.add("selected")
-        }
+    //     let newElement = newRef.current as HTMLElement;
+    //     newElement.classList.remove("greyedOut");
+    //     if (!newElement.classList.contains("selected")){
+    //         newElement.classList.add("selected")
+    //     }
 
-        let oldElement = oldRef.current as HTMLElement;
-        oldElement.classList.remove("selected");
-        if (!oldElement.classList.contains("greyedOut")){
-            oldElement.classList.add("greyedOut")
-        }
+    //     let oldElement = oldRef.current as HTMLElement;
+    //     oldElement.classList.remove("selected");
+    //     if (!oldElement.classList.contains("greyedOut")){
+    //         oldElement.classList.add("greyedOut")
+    //     }
         
 
-      }, [context])
+    //   }, [context])
 
-    useEffect(() => {
-        switchContext()
-    }, [])
+    // useEffect(() => {
+    //     switchContext()
+    // }, [])
 
-    const handleSubmit = (e : React.FormEvent<HTMLFormElement>) : Promise<void> => {
-        e.preventDefault();
+    const handleSubmit = () : Promise<void> => {
         if (context === "Volunteer"){
             let objectToSend = {
                 "accountType" : "Volunteer",
@@ -93,7 +93,7 @@ const Register : NextPage = () => {
             let objectToSend = {
                 "accountType" : "Organisation",
                 "name" : (document.querySelector("#org_name") as HTMLInputElement).value,
-                "type" : (document.querySelector("#org_type") as HTMLInputElement).value,
+                "type" : "",
                 "email" : (document.querySelector("#org_email") as HTMLInputElement).value,
                 "password" : (document.querySelector("#org_password") as HTMLInputElement).value,
                 "phone" : (document.querySelector("#org_phoneNumber") as HTMLInputElement).value,
@@ -114,69 +114,79 @@ const Register : NextPage = () => {
 
     const showVolunteerInputs = () => {
         return(
-            <>  
-                <div className="m-2">
-                    <label htmlFor="givenName">Given Name</label><br/>
-                    <input id="vol_givenName" className="rounded-sm bg-btn-500" type="text" name="giveName"></input>
+            <div className='mt-20 flex flex-col justify-start items-center'>
+                <div><img className="w-10 h-10" src="/logo.svg"></img></div>
+                <a>or create an organisation account instead</a>
+                <div className="w-screen m-1 mt-10 flex justify-center max-w-md">
+                    <input id="vol_givenName" className="input input-bordered bg-slate-100 w-10/12" placeholder="Given Name"></input>
                 </div>
-                <div className="m-2">
-                    <label htmlFor="lastName">Last Name</label><br/>
-                    <input id="vol_lastName" className="rounded-sm bg-btn-500" type="text" name="lastName"></input>
+                <div className="w-screen m-1 flex justify-center max-w-md">
+                    <input id="vol_lastName" className="input input-bordered bg-slate-100 w-10/12" placeholder="Last Name"></input>
                 </div>
-                <div className="m-2">
-                    <label htmlFor='email'>Email</label><br/>
-                    <input id="vol_email" className="rounded-sm bg-btn-500" type="email" name="email"></input>
+                <div className="w-screen m-1 flex justify-center max-w-md">
+                    <input id="vol_email" className="input input-bordered bg-slate-100 w-10/12" placeholder="Email"></input>
                 </div>
-                <div className="m-2">
-                    <label htmlFor="password">Password</label><br/>
-                    <input id="vol_password" className="rounded-sm bg-btn-500" type="password" name="password"></input>
+                <div className="w-screen m-1 flex justify-center max-w-md">
+                    <input id="vol_phoneNumber" className="input input-bordered bg-slate-100 w-10/12" placeholder="Phone Number"></input>
                 </div>
-                <div className="m-2">
-                    <label htmlFor="confirmPassword">Confirm Password</label><br/>
-                    <input className="rounded-sm bg-btn-500" type="password" name="confirmPassword"></input>
+                <div className="w-screen m-1 flex justify-center max-w-md">
+                    <input id="vol_newPassword" className="input input-bordered bg-slate-100 w-10/12" placeholder="New Password"></input>
                 </div>
-                <div className="m-2">
-                    <label htmlFor="phoneNumber">phone number</label><br/>
-                    <input id="vol_phoneNumber" className="rounded-sm bg-btn-500" type="tel" name="phoneNumber"></input>
+                <div className="w-screen m-1 flex justify-center max-w-md">
+                    <input id="vol_confirmPassword" className="input input-bordered bg-slate-100 w-10/12" placeholder="Confirm Password"></input>
                 </div>
-            </>
-        )
+                <div className="flex justify-around mt-7">
+                    <label className="label-text mr-3">I agree to the terms and conditions</label>
+                    <input ref={checkboxRef} type="checkbox" className="checkbox ml-3 checkbox-accent"></input>
+                </div>
+                <div className="w-screen mt-7 flex justify-center max-w-md">
+                    <button onClick={handleSubmit} className="btn w-10/12 bg-gradient-to-r from-accent to-neutral">
+                        Register
+                    </button>	
+                </div>
+            </div>
+          )
     }
 
     const showOrgInputs = () => {
         return(
-            <>  
-                <div className="m-2">
-                    <label htmlFor="name">Name</label><br/>
-                    <input id="org_name" className="rounded-sm bg-btn-500" type="text" name="name"></input>
+            <div className='mt-20 flex flex-col justify-start items-center'>
+                <div><img className="w-10 h-10" src="/logo.svg"></img></div>
+                <a>or create a volunteer account instead</a>
+                <div className="w-screen m-1 mt-10 flex justify-center max-w-md">
+                    <input id="org_givenName" className="input input-bordered bg-slate-100 w-10/12" placeholder="Organisation Name"></input>
                 </div>
-                <div className="m-2">
-                    <label htmlFor="business_email">Email</label><br/>
-                    <input id="org_email" className="rounded-sm bg-btn-500" type="email" name="business_email"></input>
+                <div className="w-screen m-1 flex justify-center max-w-md">
+                    <input id="org_email" className="input input-bordered bg-slate-100 w-10/12" placeholder="Email"></input>
                 </div>
-                <div className="m-2">
-                    <label htmlFor='type'>Type</label><br/>
-                    <input id="org_type" className="rounded-sm bg-btn-500" type="text" name="type"></input>
+                <div className="w-screen m-1 flex justify-center max-w-md">
+                    <input id="org_phoneNumber" className="input input-bordered bg-slate-100 w-10/12" placeholder="Phone Number"></input>
                 </div>
-                <div className="m-2">
-                    <label htmlFor="website">Website</label><br/>
-                    <input id="org_website" className="rounded-sm bg-btn-500" type="text" name="website"></input>
+                <div className="w-screen m-1 flex justify-center max-w-md">
+                    <input id="org_newPassword" className="input input-bordered bg-slate-100 w-10/12" placeholder="New Password"></input>
                 </div>
-                <div className="m-2">
-                    <label htmlFor="phoneNumber">phone number</label><br/>
-                    <input id="org_phoneNumber" className="rounded-sm bg-btn-500" type="tel" name="phoneNumber"></input>
+                <div className="w-screen m-1 flex justify-center max-w-md">
+                    <input id="org_confirmPassword" className="input input-bordered bg-slate-100 w-10/12" placeholder="Confirm Password"></input>
                 </div>
-                <div className="m-2">
-                    <label htmlFor="business_password">Password</label><br/>
-                    <input id="org_password" className="rounded-sm bg-btn-500" type="password" name="business_password"></input>
+                <div className="w-screen m-1 flex justify-center max-w-md">
+                    <input id="org_website" className="input input-bordered bg-slate-100 w-10/12" placeholder="Link to website"></input>
                 </div>
-                <div className="m-2">
-                    <label htmlFor="business_confirmPassword">Confirm Password</label><br/>
-                    <input className="rounded-sm bg-btn-500" type="password" name="business_confirmPassword"></input>
+                <div className="flex justify-around mt-7">
+                    <label className="label-text mr-3">I agree to the terms and conditions</label>
+                    <input ref={checkboxRef} type="checkbox" className="checkbox ml-3 checkbox-accent"></input>
                 </div>
-            </>
-        )
+                <div className="w-screen mt-7 flex justify-center max-w-md">
+                    <button onClick={handleSubmit} className="btn w-10/12 bg-gradient-to-r from-accent to-neutral">
+                        Register
+                    </button>	
+                </div>
+            </div>
+          )
     }
+    return(
+       <div></div>
+      )
+
     return(
         <div className="w-screen h-screen bg-bg1-500 flex justify-center items-center">
             <div className='w-4/5 h-4/5 bg-bg2-500 rounded-md relative'>
