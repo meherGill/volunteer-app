@@ -1,4 +1,21 @@
 module.exports = {
+  daisyui: {
+    themes: [
+      {
+        mytheme: {
+            "primary": "#d66f2b",
+            "secondary": "#c45c29",
+            "accent": "#0891b2",
+            "neutral": "#22d3ee",
+            "base-100": "#FFF7ED",
+            "info": "#A6D2E7",
+            "success": "#177D4C",
+            "warning": "#B27C10",                
+            "error": "#FA4E42",
+        }
+      }
+    ]
+  },
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx}",
     "./src/components/**/*.{js,ts,jsx,tsx}",
@@ -39,5 +56,7 @@ module.exports = {
       }
     },
   },
-  plugins: [],
+  plugins: [
+    require("daisyui")
+  ],
 }

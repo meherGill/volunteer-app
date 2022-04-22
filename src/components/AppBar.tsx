@@ -12,7 +12,7 @@ const AppBar = () => {
             router.push("/")
         }
     }
-    return(
+    return( 
         <>  
         <div>
             <div className="relative h-56 p-2 z-10">
