@@ -9,41 +9,51 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  switch (req.method) {
-    case "GET":
-      handleGetRequest(req, res);
-      break;
+  return new Promise((resolve) => {
+    switch (req.method) {
+      case "GET":
+        handleGetRequest(req, res);
+        break;
 
-    case "POST":
-      handlePostRequest(req, res);
-      break;
-    default:
-      res.status(404).json({ success: false });
-  }
+      case "POST":
+        handlePostRequest(req, res);
+        break;
+      default:
+        res.status(404).json({ success: false });
+    }
+    return resolve;
+  });
 }
 
 const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
-  const getParams = {
-    TableName: TABLE_NAME,
-    Key: {
-      email: {
-        S: "redcross@helpline.com",
+  const { email }: { email?: string } = req.query;
+
+  if (email) {
+    const getParams = {
+      TableName: TABLE_NAME,
+      Key: {
+        email: {
+          S: email,
+        },
       },
-    },
-  };
+    };
 
-  const command = new GetItemCommand(getParams);
+    const command = new GetItemCommand(getParams);
 
-  try {
-    const response = await dynamodb.send(command);
+    try {
+      const response = await dynamodb.send(command);
 
-    if (!response.Item) {
-      res.status(404).send("Organization user not found");
+      if (!response.Item) {
+        res.status(404).send("Organization user not found");
+      }
+      return res
+        .status(response?.$metadata?.httpStatusCode!)
+        .json(response.Item);
+    } catch (err) {
+      return res.status(500).end(err);
     }
-    res.status(response?.$metadata?.httpStatusCode!).json(response.Item);
-  } catch (err) {
-    res.status(500).send(err);
   }
+  res.status(400).send("Missing email field");
 };
 
 const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -77,12 +87,12 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const response = await dynamodb.send(putNewUserItem);
-    res
+    return res
       .status(response?.$metadata?.httpStatusCode!)
-      .send("Organiztion account successfully created");
+      .end("Organiztion account successfully created");
   } catch (err) {
     console.log(err);
-    console.log(putParams)
-    res.status(409).send(err);
+    console.log(putParams);
+    return res.status(409).send(err);
   }
 };

@@ -10,18 +10,21 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  switch (req.method) {
-    case "GET":
-      handleGetRequest(req, res);
-      break;
+  return new Promise((resolve) => {
+    switch (req.method) {
+      case "GET":
+        handleGetRequest(req, res);
+        break;
 
-    case "POST":
-      handlePostRequest(req, res);
-      break;
+      case "POST":
+        handlePostRequest(req, res);
+        break;
 
-    default:
-      res.status(404).json({ success: false });
-  }
+      default:
+        res.status(404).json({ success: false });
+    }
+    return resolve;
+  });
 }
 
 const handleGetRequest = async (_: NextApiRequest, res: NextApiResponse) => {
@@ -35,11 +38,11 @@ const handleGetRequest = async (_: NextApiRequest, res: NextApiResponse) => {
     const response = await dynamodb.send(command);
 
     if (!response.Items) {
-      res.status(404).send("No requests for aid at the moment");
+      res.status(404).end("No requests for aid at the moment");
     }
     res.status(response.$metadata.httpStatusCode! || 200).json(response.Items);
   } catch (err) {
-    res.status(500).send(err);
+    res.status(500).end(err);
   }
 };
 
@@ -73,12 +76,10 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const response = await dynamodb.send(cmd);
-    res
+    return res
       .status(response.$metadata.httpStatusCode! || 200)
-      .send("Aid request created successfully");
+      .end("Aid request created successfully");
   } catch (err) {
-    console.log(err)
-    console.log("pppp")
-    res.status(409).send(err);
+    return res.status(409).end(err);
   }
 };

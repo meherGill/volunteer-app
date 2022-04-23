@@ -14,18 +14,21 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  switch (req.method) {
-    case "GET":
-      handleGetRequest(req, res);
-      break;
+  return new Promise((resolve) => {
+    switch (req.method) {
+      case "GET":
+        handleGetRequest(req, res);
+        break;
 
-    case "POST":
-      handlePostRequest(req, res);
-      break;
+      case "POST":
+        handlePostRequest(req, res);
+        break;
 
-    default:
-      res.status(404).json({ success: false });
-  }
+      default:
+        res.status(404).json({ success: false });
+    }
+    return resolve;
+  });
 }
 
 const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {

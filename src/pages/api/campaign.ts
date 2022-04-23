@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import {
   PutItemCommand,
   ScanCommand,
+  GetItemCommand,
   DeleteItemCommand,
 } from "@aws-sdk/client-dynamodb";
 import { v4 as uuidv4 } from "uuid";
@@ -14,22 +15,26 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  switch (req.method) {
-    case "GET":
-      handleGetRequest(req, res);
-      break;
+  return new Promise((resolve) => {
+    switch (req.method) {
+      case "GET":
+        handleGetRequest(req, res);
+        break;
 
-    case "POST":
-      handlePostRequest(req, res);
-      break;
+      case "POST":
+        handlePostRequest(req, res);
+        break;
 
-    case "DELETE":
-      handleDeleteRequest(req, res);
-      break;
+      case "DELETE":
+        handleDeleteRequest(req, res);
+        break;
 
-    default:
-      res.status(404).json({ success: false });
-  }
+      default:
+        res.status(404).json({ success: false });
+    }
+
+    return resolve;
+  });
 }
 
 const handleGetRequest = async (_: NextApiRequest, res: NextApiResponse) => {
@@ -43,11 +48,11 @@ const handleGetRequest = async (_: NextApiRequest, res: NextApiResponse) => {
     const response = await dynamodb.send(command);
 
     if (!response.Items) {
-      res.status(404).send("No campagins available");
+      return res.status(404).end("No campagins available");
     }
-    res.status(response.$metadata.httpStatusCode!).json(response.Items);
+    return res.status(response.$metadata.httpStatusCode!).json(response.Items);
   } catch (err) {
-    res.status(500).send(err);
+    return res.status(500).end(err);
   }
 };
 
@@ -90,14 +95,14 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const response = await dynamodb.send(cmd);
-    res
+    return res
       .status(response.$metadata.httpStatusCode!)
-      .send("Campaign created created");
+      .end("Campaign created created");
   } catch (err) {
-    console.log(err);
-    console.log(putParams);
-    console.log(req.body);
-    res.status(409).send(err);
+    // console.log(err);
+    // console.log(putParams);
+    // console.log(req.body);
+    return res.status(409).end(err);
   }
 };
 
@@ -105,28 +110,44 @@ const handleDeleteRequest = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
-  const { _id } = req.query;
+  const { _id }: { _id?: string } = req.query;
 
   if (_id) {
-    const deleteItemByIdParams = {
+    const params = {
       Key: {
         _id: {
-          S: _id.toString(),
+          S: _id,
         },
       },
       TableName: TABLE_NAME,
     };
 
-    const cmd = new DeleteItemCommand(deleteItemByIdParams);
+    /**
+     * we'll first check if the item exists
+     */
     try {
-      const response = await dynamodb.send(cmd);
-      if (!response) {
-        res.status(404).send(`No campagin record found with id ${_id}`);
+      const response = await dynamodb.send(new GetItemCommand(params));
+
+      if (!response.Item) {
+        return res.status(404).end(`No campagin record found with id ${_id}`);
       }
-      // res.status(response.$metadata.httpStatusCode!).json(response);
     } catch (err) {
-      res.status(409).send(err);
+      return res.status(409).end(err);
+    }
+
+    /**
+     * If the item exists, we'll move on to deletion
+     */
+    try {
+      const response = await dynamodb.send(new DeleteItemCommand(params));
+
+      return res
+        .status(response.$metadata.httpStatusCode! || 200)
+        .end(`Campaign with ${_id} has been deleted successfully`);
+    } catch (err) {
+      return res.status(409).end(err);
     }
   }
-  res.status(400).send("Missing field _id");
+
+  return res.status(400).send("Missing field _id");
 };
