@@ -1,9 +1,7 @@
-import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { start } from 'repl';
 import GMaps from './GMaps';
-import ProfilePicture from './ProfilePicture';
-import RequestAid from './requestAid';
 
 const MainUser = () => {
     
@@ -11,7 +9,30 @@ const MainUser = () => {
     const [height, setHeight] = useState("");   
     const router = useRouter()
     
+    const [start_latLng, setStart_latLng] = useState({lat: 0, lng: 0})
+    var options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      };
+      
+      function success(pos : any) {
+        var crd = pos.coords;
+        
+        setStart_latLng({lat: crd.latitude , lng: crd.longitude})
+        // console.log('Your current position is:');
+        // console.log(`Latitude : ${crd.latitude}`);
+        // console.log(`Longitude: ${crd.longitude}`);
+        // console.log(`More or less ${crd.accuracy} meters.`);
+      }
+      
+      function error(err: any) {
+        console.warn(`ERROR(${err.code}): ${err.message}`);
+      }
+      
+
     useEffect(() => {
+        navigator.geolocation.getCurrentPosition(success, error, options);
         // let _height = window.innerHeight;
         let _width = window.innerWidth;
 
@@ -43,7 +64,7 @@ const MainUser = () => {
     return(
         <>
             <div className='flex justify-center mt-10'>
-                <GMaps width={width} height={height}/> 
+                <GMaps width={width} height={height} start_lat={start_latLng.lat} start_long={start_latLng.lng}/> 
             </div>
             <div className='flex flex-col justify-start items-center'>
                 <div className='w-full mt-8 pl-2 '><h2 className='text-2xl font-bold font-sans'>Quick Access</h2></div>

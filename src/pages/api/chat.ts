@@ -106,10 +106,11 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 
-  /** 
+  /* 
     if either email is provided, we find a record where  email might exist
     in either `email1` property or `email2` property
-   */
+  */
+ 
   if (email1 || email2) {
     const emailToFind = email1 ?? email2;
 

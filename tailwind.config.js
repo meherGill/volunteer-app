@@ -12,6 +12,7 @@ module.exports = {
             "success": "#177D4C",
             "warning": "#B27C10",                
             "error": "#FA4E42",
+            "custom": "#AABBCC"
         }
       }
     ]
