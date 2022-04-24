@@ -1,16 +1,36 @@
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
-
+import React, { useEffect, useRef, useState } from 'react'
+import { start } from 'repl'
 import GMaps from './GMaps'
-import ProfilePicture from './ProfilePicture'
-import RequestAid from './requestAid'
 
 const MainUser = () => {
   const [width, setWidth] = useState('')
   const [height, setHeight] = useState('')
   const router = useRouter()
 
+  const [start_latLng, setStart_latLng] = useState({ lat: 0, lng: 0 })
+  var options = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0,
+  }
+
+  function success(pos: any) {
+    var crd = pos.coords
+
+    setStart_latLng({ lat: crd.latitude, lng: crd.longitude })
+    // console.log('Your current position is:');
+    // console.log(`Latitude : ${crd.latitude}`);
+    // console.log(`Longitude: ${crd.longitude}`);
+    // console.log(`More or less ${crd.accuracy} meters.`);
+  }
+
+  function error(err: any) {
+    console.warn(`ERROR(${err.code}): ${err.message}`)
+  }
+
   useEffect(() => {
+    navigator.geolocation.getCurrentPosition(success, error, options)
     // let _height = window.innerHeight;
     let _width = window.innerWidth
 
@@ -20,7 +40,7 @@ const MainUser = () => {
       setWidth(_width - 50 + 'px')
     }
     setHeight('300px')
-  }, [])
+  })
 
   const showQuickDonate = () => {
     router.push('/quickDonate')
@@ -37,13 +57,18 @@ const MainUser = () => {
   return (
     <>
       <div className="flex justify-center mt-10">
-        <GMaps width={width} height={height} />
+        <GMaps
+          width={width}
+          height={height}
+          start_lat={start_latLng.lat}
+          start_long={start_latLng.lng}
+        />
       </div>
       <div className="flex flex-col justify-start items-center">
         <div className="w-full mt-8 pl-2 ">
           <h2 className="text-2xl font-bold font-sans">Quick Access</h2>
         </div>
-        <div className="max-w-md grid grid-rows-2 grid-cols-2 gap-4 mt-6 mb-10 text-white font-bold">
+        <div className="max-w-md grid grid-rows-2 grid-cols-2 gap-4 mt-6 mb-10 text-white">
           <div className="flex justify-center items-center">
             <button
               className="rounded-md w-40 h-24 bg-gradient-to-tr from-indigo-300 to-cyan-500"

@@ -43,9 +43,12 @@ const OrgMyEvents = () => {
                 <li key={val.title} className="flex flex-col w-full items-start justify-center rounded-sm card p-2 my-3">
                     <h2 className="bg-orange-200 w-full font-bold p-3 rounded-lg">{val.title}</h2>
                     <p className="p-3">{val.description}</p>
-                    <p className="p-3">{!val.virtualOnly ? "Location : " + val.address : "Virtual Event"}</p>
+                    <div className="flex flex-row justify-between w-full">
+                        <p className="p-3">{!val.virtualOnly ? "Location : " + val.address : "Virtual Event"}</p>
+                        <button className="btn btn-error mr-4">Remove</button>
+                    </div>
                 </li>
-            )
+            )   
         })
     }
     return(
