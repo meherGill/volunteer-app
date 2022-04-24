@@ -29,7 +29,7 @@ const AppBar = () => {
                 <input
                   type="text"
                   placeholder="Search Organisation or campaign"
-                  className="input input-ghost input-sm w-full p-1 bg-orange-100 border-none mr-2"
+                  className="input input-ghost input-sm w-full p-1 bg-orange-100 focus:outline-none active:outline-none mr-2"
                 />
                 <button className="btn btn-square btn-sm p-1 bg-teal-600 text-white rounded-none">
                   <SearchIcon />
