@@ -3,7 +3,7 @@ module.exports = {
     themes: [
       {
         mytheme: {
-            "primary": "#d66f2b",
+            "primary": "#e3a18d",
             "secondary": "#c45c29",
             "accent": "#0891b2",
             "neutral": "#22d3ee",
@@ -27,7 +27,10 @@ module.exports = {
         '3' : 3,
         '1' : 1,
       },
-
+      fontFamily:{
+        'raleway' : ['"Raleway"'],
+        'roboto' : ['"Roboto"']
+      },
       colors: {
         pFont: {
           500: "#007980",
