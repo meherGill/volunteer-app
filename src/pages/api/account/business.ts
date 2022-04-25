@@ -1,33 +1,34 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { PutItemCommand, GetItemCommand } from "@aws-sdk/client-dynamodb";
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { PutItemCommand, GetItemCommand, ScanCommand } from '@aws-sdk/client-dynamodb'
 
-import { dynamodb } from "@lib/dynamo-db";
+import { dynamodb } from '@lib/dynamo-db'
 
-const TABLE_NAME = "OrganizationAccount";
+const TABLE_NAME = 'OrganizationAccount'
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  return new Promise((resolve) => {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  return new Promise(resolve => {
     switch (req.method) {
-      case "GET":
-        handleGetRequest(req, res);
-        break;
+      case 'GET':
+        handleGetRequest(req, res)
+        break
 
-      case "POST":
-        handlePostRequest(req, res);
-        break;
+      case 'POST':
+        handlePostRequest(req, res)
+        break
+
       default:
-        res.status(404).json({ success: false });
+        res.status(404).json({ success: false })
     }
-    return resolve;
-  });
+    return resolve
+  })
 }
 
 const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { email }: { email?: string } = req.query;
+  const { email }: { email?: string } = req.query
 
+  /**
+   * if an email is provided, fetch an item/charity based on that email
+   */
   if (email) {
     const getParams = {
       TableName: TABLE_NAME,
@@ -36,28 +37,42 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
           S: email,
         },
       },
-    };
+    }
 
-    const command = new GetItemCommand(getParams);
+    const command = new GetItemCommand(getParams)
 
     try {
-      const response = await dynamodb.send(command);
+      const response = await dynamodb.send(command)
 
       if (!response.Item) {
-        res.status(404).send("Organization user not found");
+        res.status(404).send('Organization user not found')
       }
-      return res
-        .status(response?.$metadata?.httpStatusCode!)
-        .json(response.Item);
+      return res.status(response?.$metadata?.httpStatusCode!).json(response.Item)
     } catch (err) {
-      return res.status(500).end(err);
+      return res.status(500).end(err)
+    }
+    /**
+     * else fetch all charities
+     */
+  } else {
+    const getParams = {
+      TableName: TABLE_NAME,
+    }
+    try {
+      const response = await dynamodb.send(new ScanCommand(getParams))
+
+      if (!response.Items) {
+        res.status(404).end('There are no organizations in the databas')
+      }
+      return res.status(response.$metadata.httpStatusCode! || 200).json(response.Items)
+    } catch (err) {
+      return res.status(500).end(err)
     }
   }
-  res.status(400).send("Missing email field");
-};
+}
 
 const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { name, email, type, password, phone, website } = req.body;
+  const { name, email, type, password, phone, website } = req.body
 
   const putParams = {
     Item: {
@@ -81,18 +96,18 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
       },
     },
     TableName: TABLE_NAME,
-  };
+  }
 
-  const putNewUserItem = new PutItemCommand(putParams);
+  const putNewUserItem = new PutItemCommand(putParams)
 
   try {
-    const response = await dynamodb.send(putNewUserItem);
+    const response = await dynamodb.send(putNewUserItem)
     return res
       .status(response?.$metadata?.httpStatusCode!)
-      .end("Organiztion account successfully created");
+      .end('Organiztion account successfully created')
   } catch (err) {
-    console.log(err);
-    console.log(putParams);
-    return res.status(409).send(err);
+    console.log(err)
+    console.log(putParams)
+    return res.status(409).send(err)
   }
-};
+}
