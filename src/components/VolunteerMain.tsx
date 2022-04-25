@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import React, { useEffect, useRef, useState } from 'react'
-import { start } from 'repl'
 import GMaps from './GMaps'
 
 const URL_FOR_CAMPAIGNS = 'http://localhost:3000/api/campaign'
@@ -22,13 +21,15 @@ const MainUser = () => {
     var crd = pos.coords
 
     setStart_latLng({ lat: crd.latitude, lng: crd.longitude })
-    set_markerVals([
-      {
+    set_markerVals((curr_vals: Array<any>) => {
+      let new_arr = [...curr_vals]
+      new_arr.push({
         lat: crd.latitude,
         lng: crd.longitude,
         label: 'current position',
-      },
-    ])
+      })
+      return new_arr
+    })
   }
 
   function error(err: any) {
@@ -49,7 +50,7 @@ const MainUser = () => {
   }, [])
 
   useEffect(() => {
-    let markers: Array<object> = []
+    let markers: Array<object> = _markers
     axios.get(URL_FOR_CAMPAIGNS).then(res => {
       let arr = res.data
       for (let i = 0; i < res.data.length; i++) {
@@ -89,7 +90,6 @@ const MainUser = () => {
           options={undefined}
           markers={_markers}
           callBackFunction={() => null}
-          ref={null}
         />
       </div>
       <div className="flex flex-col justify-start items-center">
