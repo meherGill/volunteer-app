@@ -38,13 +38,13 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   const { _id }: { _id?: string } = req.query
 
   /**
-   * if an email is provided, fetch an item/charity based on that email
+   * if an _id is provided, fetch an item based on that email
    */
   if (_id) {
     const getParams = {
       TableName: TABLE_NAME,
       Key: {
-        id: {
+        _id: {
           S: _id,
         },
       },
@@ -56,9 +56,9 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
       const response = await dynamodb.send(command)
 
       if (!response.Item) {
-        res.status(404).send(`Could not find campaign with id ${_id}`)
+        return res.status(404).end(`Could not find campaign with id ${_id}`)
       }
-      return res.status(response?.$metadata?.httpStatusCode!).json(response.Item)
+      res.status(response?.$metadata?.httpStatusCode!).json(response.Item)
     } catch (err) {
       return res.status(500).end(err)
     }

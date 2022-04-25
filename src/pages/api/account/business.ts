@@ -45,7 +45,7 @@ const handleGetRequest = async (req: NextApiRequest, res: NextApiResponse) => {
       const response = await dynamodb.send(command)
 
       if (!response.Item) {
-        res.status(404).send('Organization user not found')
+        res.status(404).end(`Could not find organization with email ${email}`)
       }
       return res.status(response?.$metadata?.httpStatusCode!).json(response.Item)
     } catch (err) {
