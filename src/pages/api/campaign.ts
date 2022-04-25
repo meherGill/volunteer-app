@@ -122,12 +122,9 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const response = await dynamodb.send(new PutItemCommand(putParams))
-    return res.status(response.$metadata.httpStatusCode!).end('Campaign created created')
+    return res.status(response.$metadata.httpStatusCode!).send('Campaign created created')
   } catch (err) {
-    // console.log(err);
-    // console.log(putParams);
-    // console.log(req.body);
-    return res.status(409).end(err)
+    return res.status(409).send(err)
   }
 }
 

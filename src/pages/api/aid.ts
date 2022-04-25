@@ -44,9 +44,13 @@ const handleGetRequest = async (_: NextApiRequest, res: NextApiResponse) => {
 }
 
 const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { email, address, description } = req.body
+  const {
+    email,
+    address: { lat, lng },
+    description,
+  } = req.body
 
-  if (!email || !address || !description) {
+  if (!email || !lat || !lng || !description) {
     res.status(400).send('One or more fields are missing')
   }
 
@@ -58,28 +62,26 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
       email: {
         S: email,
       },
-      // TODO: verify the address
+      description: {
+        S: description,
+      },
       address: {
         M: {
           lat: {
-            S: address.lat,
+            // time to rethink your life choices
+            N: lat.toString(),
           },
           lng: {
-            S: address.lng,
+            N: lng.toString(),
           },
         },
-      },
-      description: {
-        S: description,
       },
     },
     TableName: TABLE_NAME,
   }
 
-  const cmd = new PutItemCommand(putParams)
-
   try {
-    const response = await dynamodb.send(cmd)
+    const response = await dynamodb.send(new PutItemCommand(putParams))
     return res
       .status(response.$metadata.httpStatusCode! || 200)
       .end('Aid request created successfully')
