@@ -45,7 +45,7 @@ const handleGetRequest = async (_: NextApiRequest, res: NextApiResponse) => {
 
 const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
   const { email, address, description } = req.body
-
+  console.log(req)
   if (!email || !address || !description) {
     res.status(400).send('One or more fields are missing')
   }
@@ -62,10 +62,10 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
       address: {
         M: {
           lat: {
-            S: address.lat,
+            N: address.lat,
           },
           lng: {
-            S: address.lng,
+            N: address.lng,
           },
         },
       },
