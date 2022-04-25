@@ -60,7 +60,14 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse) => {
       },
       // TODO: verify the address
       address: {
-        S: address,
+        M: {
+          lat: {
+            S: address.lat,
+          },
+          lng: {
+            S: address.lng,
+          },
+        },
       },
       description: {
         S: description,
